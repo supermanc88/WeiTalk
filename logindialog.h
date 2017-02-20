@@ -1,0 +1,60 @@
+#ifndef LOGINDIALOG_H
+#define LOGINDIALOG_H
+
+#include <QDialog>
+#include <QPropertyAnimation>
+#include <QSystemTrayIcon>
+#include <QMenu>
+#include <QSequentialAnimationGroup>
+
+#include "ui_login.h"
+
+namespace Ui {
+class LoginDialog;
+}
+
+class LoginDialog : public QDialog, public Ui::LoginDialog
+{
+    Q_OBJECT
+public:
+    explicit LoginDialog(QWidget *parent = 0);
+
+signals:
+
+public slots:
+    //为支持窗口无标题栏，自由拖动，重写鼠标事件
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseReleaseEvent(QMouseEvent *event);
+    virtual void mouseMoveEvent(QMouseEvent *event);
+
+    void on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason);     //托盘双击响应
+
+    void initSysTrayContextMenu();  //初始化设置托盘菜单
+
+    void initLoginAnimation(); //初始化登录动画
+
+    void on_loginPushButton_clicked(); //登录按钮
+
+    void loginSucess(); //登录成功，显示好友界面
+
+private slots:
+    void on_pushButton_3_clicked();//关闭
+    void on_pushButton_2_clicked();//最小化
+
+private:
+    QPoint m_movePosition;
+    bool m_moving;
+
+//    QPropertyAnimation * m_loginAnimation; //设置登录动画
+    QSequentialAnimationGroup * m_loginAnimationGroup; //登录动画组
+
+    QSystemTrayIcon * m_trayIcon; //系统托盘
+
+    QMenu * m_sysTrayMenu; //托盘菜单
+
+    //记录图片原始位置
+    int pic_startX;
+    int pic_startY;
+};
+
+#endif // LOGINDIALOG_H
