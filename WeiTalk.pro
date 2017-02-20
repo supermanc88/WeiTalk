@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     imtoolitem.cpp \
     imtoolbox.cpp \
     listbutton.cpp \
-    friendlistarea.cpp
+    friendlistarea.cpp \
+    singlechat.cpp
 
 HEADERS  += \
     logindialog.h \
@@ -28,13 +29,15 @@ HEADERS  += \
     imtoolitem.h \
     imtoolbox.h \
     listbutton.h \
-    friendlistarea.h
+    friendlistarea.h \
+    singlechat.h
 
 FORMS += \
     login.ui \
     frienddialog.ui \
     frienditem.ui \
-    friendlistarea.ui
+    friendlistarea.ui \
+    singlechat.ui
 
 RESOURCES += \
     faces.qrc \
