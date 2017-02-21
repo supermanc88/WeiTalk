@@ -15,6 +15,10 @@ public:
     explicit SingleChat(QWidget *parent = 0);
     ~SingleChat();
 
+public slots:
+    void ShowMinimize();
+    void CloseCurrentWindow();
+
 private:
     Ui::SingleChat *ui;
 };

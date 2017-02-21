@@ -6,12 +6,21 @@
 
 #include "frienddialog.h"
 
+/*
+ * setAttribute(Qt::WA_QuitOnClose, true);
+ * setAttribute(Qt::WA_QuitOnClose, false);
+ * 在主窗口设置为true，别的窗口设置为false
+ * 当关闭主窗口时，所有的窗口也将被关闭
+ */
 
 
 LoginDialog::LoginDialog(QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);   //不显示标题栏 & 始终保持顶端
     setupUi(this);
+
+    setAttribute(Qt::WA_QuitOnClose, false);
+
     m_moving = false;
 
     //初始化托盘及托盘菜单
@@ -27,6 +36,12 @@ LoginDialog::LoginDialog(QWidget *parent) : QDialog(parent)
 
     //初始化登录画面
     initLoginAnimation();
+
+    connect(this->myLabel, SIGNAL(clicked()), this, SLOT(ShowMinimize()));
+    connect(this->myLabel_2, SIGNAL(clicked()), this, SLOT(CloseWindow()));
+
+    //创建QXmppClient
+    this->m_xmppClient = new QXmppClient;
 }
 
 void LoginDialog::mousePressEvent(QMouseEvent *event)
@@ -147,6 +162,9 @@ void LoginDialog::on_loginPushButton_clicked()
         //登录按钮改成取消
         this->loginPushButton->setText(tr("取消"));
 
+        //获取账号密码开始登录
+        signIn();
+
         //这里到最后是需要响应的，先只做效果
         connect(this->m_loginAnimationGroup, SIGNAL(finished()), this, SLOT(loginSucess()));
 //        loginSucess();
@@ -165,6 +183,9 @@ void LoginDialog::on_loginPushButton_clicked()
         this->getPasswordLabel->setVisible(true);
         this->registerLabel->setVisible(true);
 
+        //取消连接服务器
+        cancelSignIn();
+
         //取消按钮改成登录
         this->loginPushButton->setText(tr("登录"));
     }
@@ -181,9 +202,27 @@ void LoginDialog::loginSucess()
     friendDlg->show();
 }
 
+void LoginDialog::signIn()
+{
+    QString userName = this->UserNameLineEdit->text();
+    QString passwd = this->PasswordLineEdit->text();
+    //userName 需要进行拼接
+    QString bareJid = userName + QString("@im.weitainet.com/gloox");
+
+    this->m_xmppClient->configuration().setJid(bareJid);
+    this->m_xmppClient->configuration().setPassword(passwd);
+
+    startConnection();//连接
+}
+
+void LoginDialog::cancelSignIn()
+{
+    this->m_xmppClient->disconnectFromServer();
+}
+
 
 //LoginDialog淡化关闭动画
-void LoginDialog::on_pushButton_3_clicked()
+void LoginDialog::CloseWindow()
 {
     QPropertyAnimation *close_animation = new QPropertyAnimation(this, "windowOpacity");
     close_animation->setDuration(500);
@@ -195,7 +234,7 @@ void LoginDialog::on_pushButton_3_clicked()
 }
 
 //最小化到托盘
-void LoginDialog::on_pushButton_2_clicked()
+void LoginDialog::ShowMinimize()
 {
     this->hide();
 
@@ -210,4 +249,9 @@ void LoginDialog::on_pushButton_2_clicked()
 
     m_trayIcon->setContextMenu(m_sysTrayMenu);
     m_trayIcon->show();
+}
+
+void LoginDialog::startConnection()
+{
+    this->m_xmppClient->connectToServer(this->m_xmppClient->configuration());
 }

@@ -22,7 +22,10 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
 {
     setupUi(this);
 
+    setAttribute(Qt::WA_QuitOnClose, true);
+
     setWindowFlags(Qt::FramelessWindowHint); //隐藏标题栏
+
 
     this->m_moving  = false;
 
@@ -74,6 +77,9 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
 
 
     this->friendAreaLayout->addWidget(m_friendListArea);
+
+    connect(this->myLabel, SIGNAL(clicked()), this, SLOT(ShowMinimize()));
+    connect(this->myLabel_2, SIGNAL(clicked()), this, SLOT(close()));
 }
 
 void FriendDialog::mousePressEvent(QMouseEvent *event)
@@ -97,5 +103,15 @@ void FriendDialog::mouseMoveEvent(QMouseEvent *event)
         this->move(event->globalPos() - m_movePosition);
         return QDialog::mouseMoveEvent(event);
     }
+}
+
+void FriendDialog::ShowMinimize()
+{
+    this->showMinimized();
+}
+
+void FriendDialog::CloseApp()
+{
+
 }
 

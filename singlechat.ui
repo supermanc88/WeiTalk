@@ -51,7 +51,7 @@
        <property name="styleSheet">
         <string notr="true">background-color: rgb(0, 0, 255);</string>
        </property>
-       <widget class="SlideNavigation" name="slideNavigation">
+       <widget class="SlideNavigation" name="slideNavigation" native="true">
         <property name="geometry">
          <rect>
           <x>-5</x>
@@ -234,14 +234,14 @@ QLabel:hover{
  </widget>
  <customwidgets>
   <customwidget>
-   <class>MyLabel</class>
-   <extends>QLabel</extends>
-   <header>mylabel.h</header>
-  </customwidget>
-  <customwidget>
    <class>SlideNavigation</class>
    <extends>QWidget</extends>
    <header>slidenavigation.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MyLabel</class>
+   <extends>QLabel</extends>
+   <header>mylabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -21,6 +21,8 @@ public:
 signals:
 
 public slots:
+    void ShowMinimize();
+    void CloseApp();
 
 private:
     bool m_moving;

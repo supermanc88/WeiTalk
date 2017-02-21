@@ -3,10 +3,15 @@
 # Project created by QtCreator 2017-02-15T17:45:08
 #
 #-------------------------------------------------
+QXMPP_INCLUDEPATH = $$PWD/qxmpp/base $$PWD/qxmpp/client $$PWD/qxmpp/server
+QXMPP_LIB = $$PWD/qxmpp/LIB/qxmpp_d0.lib
+
+INCLUDEPATH += $$QXMPP_INCLUDEPATH
+LIBS += $$QXMPP_LIB
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network
 
 TARGET = WeiTalk
 TEMPLATE = app

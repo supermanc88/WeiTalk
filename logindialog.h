@@ -6,8 +6,9 @@
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include <QSequentialAnimationGroup>
-
 #include "ui_login.h"
+
+#include "QXmppClient.h"
 
 namespace Ui {
 class LoginDialog;
@@ -37,9 +38,14 @@ public slots:
 
     void loginSucess(); //登录成功，显示好友界面
 
+    void signIn();//登录
+
+    void cancelSignIn(); //取消登录
+
 private slots:
-    void on_pushButton_3_clicked();//关闭
-    void on_pushButton_2_clicked();//最小化
+    void CloseWindow();//关闭
+    void ShowMinimize();//最小化
+    void startConnection();  //开始连接登录
 
 private:
     QPoint m_movePosition;
@@ -55,6 +61,8 @@ private:
     //记录图片原始位置
     int pic_startX;
     int pic_startY;
+
+    QXmppClient * m_xmppClient;
 };
 
 #endif // LOGINDIALOG_H

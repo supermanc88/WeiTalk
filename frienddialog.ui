@@ -16,52 +16,6 @@
   <property name="styleSheet">
    <string notr="true">background-color: rgb(236, 157, 0);</string>
   </property>
-  <widget class="QLabel" name="miniShowLabel">
-   <property name="geometry">
-    <rect>
-     <x>190</x>
-     <y>10</y>
-     <width>30</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>微软雅黑</family>
-     <pointsize>12</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>一</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="closeLabel">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>10</y>
-     <width>30</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>微软雅黑</family>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>X</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
@@ -192,7 +146,82 @@ image: url(:/images/icon_last_selected.png);
    </property>
    <layout class="QVBoxLayout" name="friendAreaLayout"/>
   </widget>
+  <widget class="MyLabel" name="myLabel">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>10</y>
+     <width>30</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel{
+  
+   color:white;
+}
+QLabel:hover{
+  background-color:rgb(212, 64, 39);
+  color:rgb(255, 255, 255);
+  border-top-right-radius:4px;
+}</string>
+   </property>
+   <property name="text">
+    <string>—</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="MyLabel" name="myLabel_2">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>10</y>
+     <width>30</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel{
+  
+   color:white;
+}
+QLabel:hover{
+  background-color:rgb(212, 64, 39);
+  color:rgb(255, 255, 255);
+  border-top-right-radius:4px;
+}</string>
+   </property>
+   <property name="text">
+    <string>X</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MyLabel</class>
+   <extends>QLabel</extends>
+   <header>mylabel.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
