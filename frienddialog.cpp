@@ -1,6 +1,6 @@
 #include "frienddialog.h"
 #include <QMouseEvent>
-//#include <QtDebug>
+#include <QtDebug>
 
 #include <QVBoxLayout>
 #include <QScrollArea>
@@ -11,6 +11,8 @@
 #include "imtoolbox.h"
 #include "imtoolitem.h"
 
+#include "QXmppRosterManager.h"
+
 
 /*
  * 目前这样可以移动整个窗口，先做个样子，后期可以把头部单独拿出来
@@ -18,14 +20,23 @@
  * 上来
  */
 
+/*
+ * FriendDialog构造函数
+ *  首先此Dialog不显示，先显示登录Dialog
+ *  确认登录成功之后，显示登录界面
+ */
+
 FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
 {
     setupUi(this);
+
+    m_xmppClient = new QXmppClient;
 
     setAttribute(Qt::WA_QuitOnClose, true);
 
     setWindowFlags(Qt::FramelessWindowHint); //隐藏标题栏
 
+//    this->hide();
 
     this->m_moving  = false;
 
@@ -80,6 +91,10 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
 
     connect(this->myLabel, SIGNAL(clicked()), this, SLOT(ShowMinimize()));
     connect(this->myLabel_2, SIGNAL(clicked()), this, SLOT(close()));
+
+    //接收好友等信息
+    connect(&this->m_xmppClient->rosterManager(), SIGNAL(rosterReceived()), this, SLOT(rosterReceived()));
+
 }
 
 void FriendDialog::mousePressEvent(QMouseEvent *event)
@@ -113,5 +128,28 @@ void FriendDialog::ShowMinimize()
 void FriendDialog::CloseApp()
 {
 
+}
+
+
+/*
+ * 所有程序由此开始
+ * 先不显示FriendDlg
+ * 显示loginDlg
+ */
+void FriendDialog::runApp()
+{
+    m_loginDialog = new LoginDialog(this->m_xmppClient);
+    m_loginDialog->show();
+    connect(this->m_loginDialog, SIGNAL(loginSucess()), this, SLOT(show()));
+}
+
+void FriendDialog::rosterReceived()
+{
+    foreach (const QString &bareJid, this->m_xmppClient->rosterManager().getRosterBareJids()) {
+        QString name = this->m_xmppClient->rosterManager().getRosterEntry(bareJid).name();
+        if(name.isEmpty())
+            name = "-";
+        qDebug("example_2_rosterHandling:: Roster received: %s [%s]", bareJid.toStdString().c_str(), qPrintable(name));
+    }
 }
 

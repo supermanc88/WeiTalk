@@ -4,6 +4,9 @@
 #include <QDialog>
 #include "ui_frienddialog.h"
 
+#include "QXmppClient.h"
+#include "logindialog.h"
+
 namespace Ui {
 class FriendDialog;
 }
@@ -24,9 +27,17 @@ public slots:
     void ShowMinimize();
     void CloseApp();
 
+    void runApp();
+
+    void rosterReceived();
+
 private:
     bool m_moving;
     QPoint m_movePosition;
+
+    QXmppClient * m_xmppClient;
+
+    LoginDialog * m_loginDialog;
 };
 
 #endif // FRIENDDIALOG_H

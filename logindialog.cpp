@@ -4,7 +4,9 @@
 
 #include <QAction>
 
-#include "frienddialog.h"
+//#include "frienddialog.h"
+
+#include "QXmppRosterManager.h"
 
 /*
  * setAttribute(Qt::WA_QuitOnClose, true);
@@ -14,7 +16,7 @@
  */
 
 
-LoginDialog::LoginDialog(QWidget *parent) : QDialog(parent)
+LoginDialog::LoginDialog(QXmppClient *xmppClient, QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);   //不显示标题栏 & 始终保持顶端
     setupUi(this);
@@ -41,7 +43,16 @@ LoginDialog::LoginDialog(QWidget *parent) : QDialog(parent)
     connect(this->myLabel_2, SIGNAL(clicked()), this, SLOT(CloseWindow()));
 
     //创建QXmppClient
-    this->m_xmppClient = new QXmppClient;
+    this->m_xmppClient = xmppClient;
+
+
+    connect(this->m_xmppClient, SIGNAL(disconnected()), this, SLOT(showSignInPageAfterUserDisconnection()));
+    connect(this->m_xmppClient, SIGNAL(connected()), this, SIGNAL(loginSucess()));
+
+//    connect(&this->m_xmppClient->rosterManager(), SIGNAL(rosterReceived()), this, SLOT(rosterReceived()));
+
+    //登录成功后，隐藏此登录界面
+    connect(this, SIGNAL(loginSucess()), this, SLOT(hide()));
 }
 
 void LoginDialog::mousePressEvent(QMouseEvent *event)
@@ -150,56 +161,26 @@ void LoginDialog::on_loginPushButton_clicked()
     //判断登录按钮的状态是登录还是取消
     if(this->loginPushButton->text() == "登录")
     {
-        m_loginAnimationGroup->start();
-        //除了登录按钮和图片laber全部隐藏
-        this->UserNameLineEdit->setVisible(false);
-        this->PasswordLineEdit->setVisible(false);
-        this->autoLoginCheckBox->setVisible(false);
-        this->remenberCheckBox->setVisible(false);
-        this->getPasswordLabel->setVisible(false);
-        this->registerLabel->setVisible(false);
-
-        //登录按钮改成取消
-        this->loginPushButton->setText(tr("取消"));
+        //显示登录时界面
+        showSignInPage();
 
         //获取账号密码开始登录
         signIn();
 
         //这里到最后是需要响应的，先只做效果
-        connect(this->m_loginAnimationGroup, SIGNAL(finished()), this, SLOT(loginSucess()));
+        //不用等动画完成再显示登录了，只要client接收到登录成功信号即可
+//        connect(this->m_loginAnimationGroup, SIGNAL(finished()), this->m_xmppClient, SIGNAL(connected()));
 //        loginSucess();
     }
     else
     {
-        //停止动画,并且把图片移动回原来位置
-        m_loginAnimationGroup->stop();
-        this->pictureLabel->move(QPoint(pic_startX, pic_startY));
-
-        //显示隐藏的控件
-        this->UserNameLineEdit->setVisible(true);
-        this->PasswordLineEdit->setVisible(true);
-        this->autoLoginCheckBox->setVisible(true);
-        this->remenberCheckBox->setVisible(true);
-        this->getPasswordLabel->setVisible(true);
-        this->registerLabel->setVisible(true);
-
+        //显示取消界面
+        showSignInPageAfterUserDisconnection();
         //取消连接服务器
         cancelSignIn();
-
-        //取消按钮改成登录
-        this->loginPushButton->setText(tr("登录"));
     }
 
 
-}
-
-void LoginDialog::loginSucess()
-{
-    //创建好友dialog，隐藏此界面，因为要保留住托盘
-    this->hide();
-
-    FriendDialog * friendDlg = new FriendDialog;
-    friendDlg->show();
 }
 
 void LoginDialog::signIn()
@@ -219,6 +200,51 @@ void LoginDialog::cancelSignIn()
 {
     this->m_xmppClient->disconnectFromServer();
 }
+
+void LoginDialog::showSignInPage()
+{
+    m_loginAnimationGroup->start();
+    //除了登录按钮和图片laber全部隐藏
+    this->UserNameLineEdit->setVisible(false);
+    this->PasswordLineEdit->setVisible(false);
+    this->autoLoginCheckBox->setVisible(false);
+    this->remenberCheckBox->setVisible(false);
+    this->getPasswordLabel->setVisible(false);
+    this->registerLabel->setVisible(false);
+
+    //登录按钮改成取消
+    this->loginPushButton->setText(tr("取消"));
+}
+
+void LoginDialog::showSignInPageAfterUserDisconnection()
+{
+    //停止动画,并且把图片移动回原来位置
+    m_loginAnimationGroup->stop();
+    this->pictureLabel->move(QPoint(pic_startX, pic_startY));
+
+    //显示隐藏的控件
+    this->UserNameLineEdit->setVisible(true);
+    this->PasswordLineEdit->setVisible(true);
+    this->autoLoginCheckBox->setVisible(true);
+    this->remenberCheckBox->setVisible(true);
+    this->getPasswordLabel->setVisible(true);
+    this->registerLabel->setVisible(true);
+
+    //取消按钮改成登录
+    this->loginPushButton->setText(tr("登录"));
+}
+
+//void LoginDialog::rosterReceived()
+//{
+//    qDebug("example_2_rosterHandling:: Roster received");
+//    foreach (const QString &bareJid, this->m_xmppClient->rosterManager().getRosterBareJids()) {
+//        QString name = this->m_xmppClient->rosterManager().getRosterEntry(bareJid).name();
+//        if(name.isEmpty())
+//            name = "-";
+//        qDebug("example_2_rosterHandling:: Roster received: %s [%s]", bareJid.toStdString().c_str(), qPrintable(name));
+//    }
+
+//}
 
 
 //LoginDialog淡化关闭动画

@@ -18,9 +18,10 @@ class LoginDialog : public QDialog, public Ui::LoginDialog
 {
     Q_OBJECT
 public:
-    explicit LoginDialog(QWidget *parent = 0);
+    explicit LoginDialog(QXmppClient *xmppClient, QWidget *parent = 0);
 
 signals:
+    void loginSucess(); //登录成功，发送此信号，显示好友界面
 
 public slots:
     //为支持窗口无标题栏，自由拖动，重写鼠标事件
@@ -36,11 +37,15 @@ public slots:
 
     void on_loginPushButton_clicked(); //登录按钮
 
-    void loginSucess(); //登录成功，显示好友界面
-
     void signIn();//登录
 
     void cancelSignIn(); //取消登录
+
+    void showSignInPage(); //显示登录时的界面
+
+    void showSignInPageAfterUserDisconnection(); //显示登录失败时或取消登录的界面
+
+//    void rosterReceived();
 
 private slots:
     void CloseWindow();//关闭
