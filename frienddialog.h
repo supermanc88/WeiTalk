@@ -6,6 +6,7 @@
 
 #include "QXmppClient.h"
 #include "logindialog.h"
+#include "imtoolitem.h"
 
 namespace Ui {
 class FriendDialog;
@@ -31,6 +32,12 @@ public slots:
 
     void rosterReceived();
 
+    //好友状态改变
+    void presenceChanged(const QString& bareJid, const QString& resource);
+
+    //好友申请
+    void presenceReceived(const QXmppPresence& presence);
+
 private:
     bool m_moving;
     QPoint m_movePosition;
@@ -38,6 +45,10 @@ private:
     QXmppClient * m_xmppClient;
 
     LoginDialog * m_loginDialog;
+
+    IMToolItem * m_item1;
+
+
 };
 
 #endif // FRIENDDIALOG_H
