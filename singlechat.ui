@@ -159,6 +159,19 @@ QLabel:hover{
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
+         <widget class="QLabel" name="nickname">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>10</y>
+            <width>211</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
         </widget>
        </item>
        <item>

@@ -1,11 +1,13 @@
 #include "singlechat.h"
 #include "ui_singlechat.h"
 
-SingleChat::SingleChat(QWidget *parent) :
+SingleChat::SingleChat(const QString& bareJid, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SingleChat)
 {
     ui->setupUi(this);
+    ui->nickname->setText(bareJid);
+    this->bareJid = bareJid;
 
     setAttribute(Qt::WA_QuitOnClose, false);
 
@@ -20,6 +22,7 @@ SingleChat::SingleChat(QWidget *parent) :
 
     connect(ui->myLabel, SIGNAL(clicked()), this, SLOT(ShowMinimize()));
     connect(ui->myLabel_2, SIGNAL(clicked()), this, SLOT(CloseCurrentWindow()));
+//    connect(ui->myLabel_2, SIGNAL(clicked()), this, SIGNAL(closeSingleChat()));
 }
 
 SingleChat::~SingleChat()
@@ -34,5 +37,6 @@ void SingleChat::ShowMinimize()
 
 void SingleChat::CloseCurrentWindow()
 {
+    emit closeSingleChat(this->bareJid);
     this->close();
 }

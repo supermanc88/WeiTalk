@@ -6,13 +6,14 @@
 #include <QDebug>
 
 #include <QXmppPresence.h>
+#include "singlechat.h"
 
 IMToolItem::IMToolItem(const QString &title, QWidget *parent) : QWidget(parent)
 {
     m_btn = new ListButton(title);
     m_layout = new QVBoxLayout;
 
-    m_itemList = new QList<QWidget *>;
+    m_itemList = new QList<FriendItem *>;
 
     m_isVisible = false;  //默认不显示
 
@@ -23,12 +24,17 @@ IMToolItem::IMToolItem(const QString &title, QWidget *parent) : QWidget(parent)
     setLayout(m_layout);
 
     connect(this->m_btn, SIGNAL(click()), this, SLOT(listShowOrHide()));
-
+    connect(this, SIGNAL(showChatDialog(QString)), this, SLOT(showItemChatDialog(QString)));
 }
 
-void IMToolItem::addItem(QWidget *item)
+void IMToolItem::addItem(FriendItem *item)
 {
     m_itemList->append(item);
+    //绑定删除好友信号
+    connect(item, SIGNAL(removeContact(QString)), this, SIGNAL(removeContact(QString)));
+    //绑定打开聊天窗口信号
+    connect(item, SIGNAL(showChatDialog(QString)), this, SIGNAL(showChatDialog(QString)));
+
     m_layout->addWidget(item);
 
     if(m_itemList->size() == 0)
@@ -84,6 +90,33 @@ void IMToolItem::updatePresence(const QString &bareJid, const QMap<QString, QXmp
         item->setPresence(*presences.begin());
     else
         item->setPresence(QXmppPresence(QXmppPresence::Unavailable));
+}
+
+void IMToolItem::showItemChatDialog(const QString &bareJid)
+{
+    if(m_singleChatMap.contains(bareJid))
+    {
+        SingleChat * singleChat = m_singleChatMap[bareJid];
+        singleChat->show();
+        singleChat->raise();
+        singleChat->activateWindow();
+    }
+    else
+    {
+        SingleChat * singleChat = new SingleChat(bareJid);
+        m_singleChatMap[bareJid] = singleChat;
+
+        connect(singleChat, SIGNAL(closeSingleChat(QString)), this, SLOT(removeItemFromChatMap(QString)));
+
+        singleChat->show();
+        singleChat->raise();
+        singleChat->activateWindow();
+    }
+}
+
+void IMToolItem::removeItemFromChatMap(QString bareJid)
+{
+    m_singleChatMap.remove(bareJid);
 }
 
 //void IMToolItem::mousePressEvent(QMouseEvent *event)

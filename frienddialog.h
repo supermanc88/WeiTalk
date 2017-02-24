@@ -38,6 +38,12 @@ public slots:
     //好友申请
     void presenceReceived(const QXmppPresence& presence);
 
+    //添加好友
+    void addContact();
+
+    //删除好友
+    void actionRemovecontact(const QString & bareJid);
+
 private:
     bool m_moving;
     QPoint m_movePosition;

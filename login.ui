@@ -149,10 +149,18 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QLineEdit" name="UserNameLineEdit"/>
+     <widget class="QLineEdit" name="UserNameLineEdit">
+      <property name="text">
+       <string>客官给钱</string>
+      </property>
+     </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="PasswordLineEdit"/>
+     <widget class="QLineEdit" name="PasswordLineEdit">
+      <property name="text">
+       <string>cheng536</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

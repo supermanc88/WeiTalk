@@ -12,8 +12,11 @@ class SingleChat : public QWidget
     Q_OBJECT
 
 public:
-    explicit SingleChat(QWidget *parent = 0);
+    explicit SingleChat(const QString& bareJid, QWidget *parent = 0);
     ~SingleChat();
+
+signals:
+    void closeSingleChat(QString bareJid);
 
 public slots:
     void ShowMinimize();
@@ -21,6 +24,7 @@ public slots:
 
 private:
     Ui::SingleChat *ui;
+    QString bareJid;
 };
 
 #endif // SINGLECHAT_H

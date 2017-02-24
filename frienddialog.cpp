@@ -13,6 +13,9 @@
 #include <QMessageBox>
 
 #include "QXmppRosterManager.h"
+#include <QInputDialog>
+
+#include "QXmppRosterIq.h"
 
 
 /*
@@ -45,48 +48,16 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
     FriendListArea * m_friendListArea = new FriendListArea;
     m_friendListArea->adjustSize();
 
-//    FriendItem * a1 = new FriendItem;
-//    FriendItem * a2 = new FriendItem;
-//    FriendItem * a3 = new FriendItem;
-//    FriendItem * a4 = new FriendItem;
-//    FriendItem * a5 = new FriendItem;
-//    FriendItem * a6 = new FriendItem;
-//    FriendItem * a7 = new FriendItem;
-//    FriendItem * a8 = new FriendItem;
-//    FriendItem * a9 = new FriendItem;
-//    FriendItem * a10 = new FriendItem;
-//    FriendItem * a11 = new FriendItem;
-//    FriendItem * a12 = new FriendItem;
-//    FriendItem * a13 = new FriendItem;
-//    FriendItem * a14 = new FriendItem;
-//    FriendItem * a15 = new FriendItem;
+
 
     IMToolBox * m_box1 = new IMToolBox;
     m_item1 = new IMToolItem("title1");
-//    m_item1->addItem(a1);
-//    m_item1->addItem(a2);
-//    m_item1->addItem(a3);
-//    m_item1->addItem(a4);
-//    m_item1->addItem(a5);
-//    m_item1->addItem(a6);
-//    m_item1->addItem(a10);
-//    m_item1->addItem(a11);
-//    m_item1->addItem(a12);
-//    m_item1->addItem(a13);
-//    m_item1->addItem(a14);
-//    m_item1->addItem(a15);
 
     m_box1->addItem(m_item1);
 
-//    IMToolBox * m_box2 = new IMToolBox;
-//    IMToolItem * m_item2 = new IMToolItem("title1");
-//    m_item2->addItem(a7);
-//    m_item2->addItem(a8);
-//    m_item2->addItem(a9);
-//    m_box2->addItem(m_item2);
+
 
     m_friendListArea->addItem(m_box1);
-//    m_friendListArea->addItem(m_box2);
 
 
     this->friendAreaLayout->addWidget(m_friendListArea);
@@ -103,6 +74,10 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
     //好友申请
     connect(this->m_xmppClient, SIGNAL(presenceReceived(QXmppPresence)), this, SLOT(presenceReceived(QXmppPresence)));
 
+    //添加好友
+    connect(this->pushButton_addContact, SIGNAL(clicked(bool)), this, SLOT(addContact()));
+
+    connect(this->m_item1, SIGNAL(removeContact(QString)), this, SLOT(actionRemovecontact(QString)));
 }
 
 void FriendDialog::mousePressEvent(QMouseEvent *event)
@@ -175,6 +150,8 @@ void FriendDialog::presenceReceived(const QXmppPresence &presence)
 {
     QString reqFrom = presence.from(); //请求来源
 
+    qDebug()<<reqFrom<<"请求";
+
     QString message;
 
     int retButton = 0;
@@ -196,10 +173,10 @@ void FriendDialog::presenceReceived(const QXmppPresence &presence)
             m_xmppClient->sendPacket(subscribed);
 
 //            // reciprocal subscription
-            QXmppPresence subscribe;
-            subscribe.setTo(reqFrom);
-            subscribe.setType(QXmppPresence::Subscribe);
-            m_xmppClient->sendPacket(subscribe);
+//            QXmppPresence subscribe;
+//            subscribe.setTo(reqFrom);
+//            subscribe.setType(QXmppPresence::Subscribe);
+//            m_xmppClient->sendPacket(subscribe);
         }
         else if(retButton == QMessageBox::No)
         {
@@ -218,13 +195,58 @@ void FriendDialog::presenceReceived(const QXmppPresence &presence)
         break;
     case QXmppPresence::Unsubscribe:
         message = "<B>%1</B> unsubscribe";
+        qDebug()<<message;
         break;
     case QXmppPresence::Unsubscribed:
         message = "<B>%1</B> unsubscribed";
+        qDebug()<<message;
         break;
 
     default:
         break;
     }
+}
+
+void FriendDialog::addContact()
+{
+    bool ok;
+    QString bareJid = QInputDialog::getText(this, "Add a jabber contact",
+                                            "Contact ID:", QLineEdit::Normal, "", &ok);
+
+    if(!ok)
+        return;
+
+//    if(!isValidBareJid(bareJid))
+//    {
+//        QMessageBox::information(this, "Invalid ID", "Specified ID <I>"+bareJid + " </I> is invalid.");
+//        return;
+//    }
+
+    if(ok && !bareJid.isEmpty())
+    {
+        QXmppPresence subscribe;
+        subscribe.setTo(bareJid);
+        subscribe.setType(QXmppPresence::Subscribe);
+        m_xmppClient->sendPacket(subscribe);
+    }
+}
+
+void FriendDialog::actionRemovecontact(const QString &bareJid)
+{
+    int answer = QMessageBox::question(this, "Remove contact",
+                                                        QString("Do you want to remove the contact <I>%1</I>").arg(bareJid),
+                                                        QMessageBox::Yes, QMessageBox::No);
+    if(answer == QMessageBox::Yes)
+    {
+        QXmppRosterIq remove;
+        remove.setType(QXmppIq::Set);
+        QXmppRosterIq::Item itemRemove;
+        itemRemove.setSubscriptionType(QXmppRosterIq::Item::Remove);
+        itemRemove.setBareJid(bareJid);
+        remove.addItem(itemRemove);
+
+        m_xmppClient->sendPacket(remove);
+    }
+
 }
 
