@@ -5,6 +5,8 @@
 #include "listbutton.h"
 #include <QDebug>
 
+#include <QXmppPresence.h>
+
 IMToolItem::IMToolItem(const QString &title, QWidget *parent) : QWidget(parent)
 {
     m_btn = new ListButton(title);
@@ -49,7 +51,39 @@ void IMToolItem::listShowOrHide()
             m_itemList->at(i)->setVisible(!(m_itemList->at(i)->isVisible()));
         }
 
-//    }
+        //    }
+}
+
+FriendItem *IMToolItem::getOrCreateItem(const QString &bareJid)
+{
+    if(m_jidRosterItemMap.contains(bareJid))
+    {
+        return m_jidRosterItemMap[bareJid];
+    }
+    else
+    {
+        FriendItem * item = new FriendItem(bareJid);
+        m_jidRosterItemMap[bareJid] = item;
+        addItem(item);
+        return item;
+    }
+}
+
+FriendItem *IMToolItem::getRosterItemFromBareJid(const QString &bareJid)
+{
+    if(m_jidRosterItemMap.contains(bareJid))
+        return m_jidRosterItemMap[bareJid];
+    else
+        return 0;
+}
+
+void IMToolItem::updatePresence(const QString &bareJid, const QMap<QString, QXmppPresence> &presences)
+{
+    FriendItem *item = getOrCreateItem(bareJid);
+    if (!presences.isEmpty())
+        item->setPresence(*presences.begin());
+    else
+        item->setPresence(QXmppPresence(QXmppPresence::Unavailable));
 }
 
 //void IMToolItem::mousePressEvent(QMouseEvent *event)

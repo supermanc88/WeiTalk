@@ -213,6 +213,8 @@ void FriendDialog::presenceReceived(const QXmppPresence &presence)
 
     case QXmppPresence::Subscribed:
         message = "<B>%1</B> accepted your request";
+        QMessageBox::information(this, "Contact Subscription", message.arg(reqFrom),
+                                 QMessageBox::Yes);
         break;
     case QXmppPresence::Unsubscribe:
         message = "<B>%1</B> unsubscribe";
