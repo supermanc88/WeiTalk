@@ -32,7 +32,9 @@ SOURCES += main.cpp \
     slidenavigation.cpp \
     checkmsg.cpp \
     searchwidget.cpp \
-    mylabel.cpp
+    mylabel.cpp \
+    weitalkserverapi.cpp \
+    userorgroupitem.cpp
 
 HEADERS  += \
     logindialog.h \
@@ -48,7 +50,9 @@ HEADERS  += \
     slidenavigation.h \
     checkmsg.h \
     searchwidget.h \
-    mylabel.h
+    mylabel.h \
+    weitalkserverapi.h \
+    userorgroupitem.h
 
 
 FORMS += \
@@ -59,7 +63,8 @@ FORMS += \
     singlechat.ui \
     wechat.ui \
     checkmsg.ui \
-    searchwidget.ui
+    searchwidget.ui \
+    userorgroupitem.ui
 
 RESOURCES += \
     faces.qrc \

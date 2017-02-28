@@ -68,6 +68,7 @@ FriendItem *IMToolItem::getOrCreateItem(const QString &bareJid)
     }
     else
     {
+        qDebug()<<"received:"<<bareJid;
         FriendItem * item = new FriendItem(bareJid);
         m_jidRosterItemMap[bareJid] = item;
         addItem(item);

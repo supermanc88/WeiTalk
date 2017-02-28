@@ -44,6 +44,9 @@ public slots:
     //删除好友
     void actionRemovecontact(const QString & bareJid);
 
+    //显示查找好友、群组界面
+    void showSearchUserOrGroup();
+
 private:
     bool m_moving;
     QPoint m_movePosition;

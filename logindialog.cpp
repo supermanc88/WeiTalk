@@ -256,7 +256,8 @@ void LoginDialog::CloseWindow()
     close_animation->setEndValue(0);
     close_animation->start();
 
-    connect(close_animation, SIGNAL(finished()), this, SLOT(close()));
+    //关闭应用程序
+    connect(close_animation, SIGNAL(finished()), qApp, SLOT(quit()));
 }
 
 //最小化到托盘

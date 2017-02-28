@@ -18,6 +18,8 @@
 #include "QXmppRosterIq.h"
 
 
+#include "searchwidget.h"
+
 /*
  * 目前这样可以移动整个窗口，先做个样子，后期可以把头部单独拿出来
  * 做一个Dialog 然后重写鼠标事件，再把那个Dialog添加到本Dialog
@@ -77,7 +79,11 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
     //添加好友
     connect(this->pushButton_addContact, SIGNAL(clicked(bool)), this, SLOT(addContact()));
 
+    //删除好友
     connect(this->m_item1, SIGNAL(removeContact(QString)), this, SLOT(actionRemovecontact(QString)));
+
+    //显示查找好友群组界面
+    connect(this->searchButton, SIGNAL(clicked()), this, SLOT(showSearchUserOrGroup()));
 }
 
 void FriendDialog::mousePressEvent(QMouseEvent *event)
@@ -248,5 +254,11 @@ void FriendDialog::actionRemovecontact(const QString &bareJid)
         m_xmppClient->sendPacket(remove);
     }
 
+}
+
+void FriendDialog::showSearchUserOrGroup()
+{
+    SearchWidget * searchWidget = new SearchWidget;
+    searchWidget->show();
 }
 
