@@ -27,12 +27,25 @@ public slots:
 
     void deleteAllSubWidget(); //清空gridlayout中所有的控件
 
+    void showPagination();//显示分页功能
+
+    void hidePagination();//隐藏分页功能按钮
+
+    void nextPageClicked();//下一页点击相应
+
+    void prePageClicked();//上一页点击相应
+
+    void gotoGoalPage();//跳转到目标页面相应
+
 private:
     Ui::SearchWidget *ui;
     QList<user_info_t> userList;
     WeiTalkServerAPI WTAPI;
 //    QGridLayout * gridLayout;
     QList<QWidget *> userListTemp;
+
+    int currentPageNum;  //当前页数
+    int totalPageNum; //总页数
 };
 
 #endif // SEARCHWIDGET_H

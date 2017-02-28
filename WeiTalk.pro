@@ -16,7 +16,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network
 TARGET = WeiTalk
 TEMPLATE = app
 
-#INCLUDEPATH += C:\Users\chengheming\Documents\QTProject\WeiTalk\slidenavigation
 
 SOURCES += main.cpp \
     logindialog.cpp \

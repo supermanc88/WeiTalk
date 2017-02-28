@@ -1,4 +1,4 @@
-#include "searchwidget.h"
+﻿#include "searchwidget.h"
 #include "ui_searchwidget.h"
 
 #include "userorgroupitem.h"
@@ -12,21 +12,22 @@ SearchWidget::SearchWidget(QWidget *parent) :
 
     setWindowFlags(Qt::FramelessWindowHint);  //不显示标题栏
 
-//    UserOrGroupItem * item1 = new UserOrGroupItem;
-//    UserOrGroupItem * item2 = new UserOrGroupItem;
-//    UserOrGroupItem * item3 = new UserOrGroupItem;
-//    UserOrGroupItem * item4 = new UserOrGroupItem;
-//    UserOrGroupItem * item5 = new UserOrGroupItem;
-//    UserOrGroupItem * item6 = new UserOrGroupItem;
+    setAttribute(Qt::WA_QuitOnClose, false);
 
-//    this->ui->gridLayout->addWidget(item1, 0, 0, 1, 1);
-//    this->ui->gridLayout->addWidget(item2, 0, 1, 1, 1);
-//    this->ui->gridLayout->addWidget(item3, 0, 2, 1, 1);
-//    this->ui->gridLayout->addWidget(item4, 1, 0, 1, 1);
-//    this->ui->gridLayout->addWidget(item5, 1, 1, 1, 1);
-//    this->ui->gridLayout->addWidget(item6, 1, 2, 1, 1);
+    hidePagination();
+
+    currentPageNum = 1;  //默认第一页
+    totalPageNum = 1;
 
     connect(this->ui->goSearchButton, SIGNAL(clicked(bool)), this, SLOT(searchUserOrGroup()));
+
+    //关联最小化和关闭按钮
+    connect(this->ui->closeLabel, SIGNAL(clicked()), this, SLOT(close()));
+    connect(this->ui->miniLabel, SIGNAL(clicked()), this, SLOT(showMinimized()));
+
+    //关联翻页按钮点击
+    connect(this->ui->prePageLabel, SIGNAL(clicked()), this, SLOT(prePageClicked()));
+    connect(this->ui->nextPageLabel, SIGNAL(clicked()), this, SLOT(nextPageClicked()));
 
 }
 
@@ -53,11 +54,27 @@ void SearchWidget::searchUserOrGroup()
 void SearchWidget::searchUser(const QString &searchContent)
 {
     userList.clear();
+    currentPageNum = 1;
+    totalPageNum = 1;
 
     deleteAllSubWidget();
+    hidePagination(); //隐藏分页
 
     WTAPI.SelectUserText(searchContent, &userList);
-    showOnWidget(1); //默认显示1页
+
+    totalPageNum = ceil(userList.size() / 6.0);//向上取整
+
+    qDebug()<<"总共页数:"<<totalPageNum;
+
+    if(totalPageNum == 1)
+    {
+        showOnWidget(1); //默认显示1页
+    }
+    else
+    {
+        showPagination(); //如果页数大于一页，就显示分页
+        showOnWidget(1);
+    }
 
     this->ui->widget_3->update();
 }
@@ -71,6 +88,8 @@ void SearchWidget::showOnWidget(int pageNum)
 {
     int listStart = (pageNum - 1) * 6;
     int listEnd = pageNum * 6;
+
+//    deleteAllSubWidget();
 
     int i=0;
     for(; listStart<userList.size() && listStart<listEnd; listStart++)
@@ -107,6 +126,72 @@ void SearchWidget::deleteAllSubWidget()
             this->ui->gridLayout->removeWidget(item);
             delete item;
         }
+    }
+}
+
+void SearchWidget::showPagination()
+{
+    this->ui->prePageLabel->show();
+    this->ui->nextPageLabel->show();
+    this->ui->goalPageLineEdit->show();
+    this->ui->goPageNumButton->show();
+
+    QString pageText = "当前第%1页,共%2页"; //这样总是乱码
+    this->ui->currentPageLabel->setText(pageText.arg(currentPageNum).arg(totalPageNum));
+
+    qDebug()<<pageText;
+}
+
+void SearchWidget::hidePagination()
+{
+    this->ui->prePageLabel->hide();
+    this->ui->nextPageLabel->hide();
+    this->ui->goalPageLineEdit->hide();
+    this->ui->goPageNumButton->hide();
+}
+
+void SearchWidget::nextPageClicked()
+{
+    int nextPageNum = currentPageNum + 1;
+    currentPageNum++;
+
+    if(nextPageNum > totalPageNum)
+    {
+        currentPageNum = totalPageNum;
+        showOnWidget(totalPageNum);
+    }
+    else
+    {
+        showOnWidget(nextPageNum);
+    }
+}
+
+void SearchWidget::prePageClicked()
+{
+    int prePageNum = currentPageNum - 1;
+    currentPageNum--;
+
+    if(prePageNum <= 1)
+    {
+        currentPageNum = 1;
+        showOnWidget(1);
+    }
+    else
+    {
+        showOnWidget(prePageNum);
+    }
+}
+
+void SearchWidget::gotoGoalPage()
+{
+    int goalPageNum = this->ui->goalPageLineEdit->text().toInt();
+    if(goalPageNum < 1 && goalPageNum > totalPageNum)
+    {
+        showOnWidget(1);
+    }
+    else
+    {
+        showOnWidget(goalPageNum);
     }
 }
 
