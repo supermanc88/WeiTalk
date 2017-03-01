@@ -15,6 +15,17 @@ class FriendDialog;
 class FriendDialog : public QDialog, public Ui::FriendDialog
 {
     Q_OBJECT
+
+public:
+    //定义移动方向
+    enum Direction
+    {
+        None,
+        Up,
+        Right,
+        Left
+    };
+
 public:
     explicit FriendDialog(QDialog *parent = 0);
 
@@ -47,6 +58,26 @@ public slots:
     //显示查找好友、群组界面
     void showSearchUserOrGroup();
 
+
+/***************************************************
+ * 窗口自动隐藏功能函数
+ */
+
+    //判断是否自动隐藏
+    void isAutoHide();
+
+    //显示隐藏的界面
+    void showWidget();
+
+    //隐藏界面
+    void hideWidget();
+
+    virtual void leaveEvent(QEvent * event);
+
+    virtual void enterEvent(QEvent * event);
+
+/***************************************************/
+
 private:
     bool m_moving;
     QPoint m_movePosition;
@@ -58,6 +89,10 @@ private:
     IMToolItem * m_item1;
 
 
+    Direction m_direction; //隐藏方向
+    bool m_isAutoHide;//是否自动隐藏
+
+    int m_desktopWidth; //桌面宽度
 };
 
 #endif // FRIENDDIALOG_H

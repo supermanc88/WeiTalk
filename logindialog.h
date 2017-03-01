@@ -68,6 +68,7 @@ private:
     int pic_startY;
 
     QXmppClient * m_xmppClient;
+
 };
 
 #endif // LOGINDIALOG_H

@@ -11,6 +11,7 @@
 #include "imtoolbox.h"
 //#include "imtoolitem.h"
 #include <QMessageBox>
+#include <QDesktopWidget>
 
 #include "QXmppRosterManager.h"
 #include <QInputDialog>
@@ -19,6 +20,7 @@
 
 
 #include "searchwidget.h"
+
 
 /*
  * 目前这样可以移动整个窗口，先做个样子，后期可以把头部单独拿出来
@@ -44,6 +46,15 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
     setWindowFlags(Qt::FramelessWindowHint); //隐藏标题栏
 
 //    this->hide();
+
+    //获取桌面宽度
+    m_desktopWidth = QApplication::desktop()->width();
+
+    //隐藏方向设置空
+    m_direction = None;
+
+    //自动隐藏默认否
+    m_isAutoHide = false;
 
     this->m_moving  = false;
 
@@ -260,5 +271,112 @@ void FriendDialog::showSearchUserOrGroup()
 {
     SearchWidget * searchWidget = new SearchWidget;
     searchWidget->show();
+}
+
+/*
+ * 根据应用程序当前位置判断朝什么方向隐藏
+ */
+void FriendDialog::isAutoHide()
+{
+    QPoint pos = this->pos();
+
+    m_isAutoHide = true;
+
+    if(pos.x() < 2)
+    {
+        m_direction = Left;
+        qDebug()<<"direction left";
+    }
+    else if(pos.y() < 2)
+    {
+        m_direction = Up;
+        qDebug()<<"direction up";
+    }
+    else if(pos.x() + this->width() > m_desktopWidth - 2)
+    {
+        //鼠标当前位置加上应用程序宽度超过桌面宽度，
+        //说明朝右隐藏
+        m_direction = Right;
+        qDebug()<<"direction rigth";
+    }
+    else
+    {
+        m_direction = None;
+        m_isAutoHide = false;
+    }
+
+}
+
+void FriendDialog::showWidget()
+{
+    QPoint pos = this->pos();
+
+    QPropertyAnimation * animation = new QPropertyAnimation(this, "geometry");
+    animation->setDuration(100);
+    animation->setStartValue(QRect(pos, this->size()));
+
+    QRect rcEnd;
+
+    if(m_direction == Up)
+    {
+        rcEnd = QRect(this->x(), 0, this->size().width(), this->rect().height());
+    }
+    else if (m_direction == Left)
+    {
+        rcEnd = QRect(0, this->y(), this->size().width(), this->rect().height());
+    }
+    else if (m_direction == Right)
+    {
+        rcEnd = QRect(m_desktopWidth - this->width(), this->y(), this->size().width(), this->rect().height());
+    }
+
+    animation->setEndValue(rcEnd);
+    animation->start();
+}
+
+/*
+ * 采用动画方式移动界面，造成向上收起的效果
+ */
+void FriendDialog::hideWidget()
+{
+    QPropertyAnimation * animation = new QPropertyAnimation(this, "geometry");
+    animation->setDuration(100);
+    animation->setStartValue(QRect(this->pos(), this->size()));
+
+    QRect rcEnd;
+    if(m_direction == Up)
+    {
+        rcEnd = QRect(this->x(), -this->height() + 2, this->size().width(), this->size().height());
+    }
+    else if (m_direction == Left)
+    {
+        rcEnd = QRect(-this->size().width() + 2, this->y(), this->size().width(), this->size().height());
+    }
+    else if (m_direction == Right)
+    {
+        rcEnd = QRect(m_desktopWidth - 2, this->y(), this->size().width(), this->size().height());
+    }
+
+    animation->setEndValue(rcEnd);
+    animation->start();
+}
+
+void FriendDialog::leaveEvent(QEvent *event)
+{
+    qDebug()<<"leave event";
+    isAutoHide();
+    if(m_isAutoHide)
+    {
+        hideWidget();
+    }
+}
+
+void FriendDialog::enterEvent(QEvent *event)
+{
+    qDebug()<<"enter event";
+    if(m_isAutoHide)
+    {
+        showWidget();
+    }
 }
 

@@ -7,6 +7,12 @@
 //#include "frienddialog.h"
 
 #include "QXmppRosterManager.h"
+#include <QApplication>
+#include <QDesktopWidget>
+
+#include <QPoint>
+
+#include <QPropertyAnimation>
 
 /*
  * setAttribute(Qt::WA_QuitOnClose, true);
