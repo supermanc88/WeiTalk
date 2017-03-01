@@ -82,8 +82,6 @@ void SearchWidget::searchUser(const QString &searchContent)
         showPagination(); //如果页数大于一页，就显示分页
         showOnWidget(1);
     }
-
-    this->ui->widget_3->update();
 }
 
 void SearchWidget::searchGroup(const QString &searchContent)
@@ -126,13 +124,21 @@ void SearchWidget::deleteAllSubWidget()
 {
     if(userListTemp.size() != 0)
     {
+        qDebug()<<"删除控件";
         QWidget * item;
+
+        int i=0;
+
         foreach (item, userListTemp)
         {
-            qDebug()<<"删除控件";
             this->ui->gridLayout->removeWidget(item);
             delete item;
+            qDebug()<<i++;
         }
+
+        userListTemp.clear();
+
+        this->ui->widget_3->update();
     }
 }
 
@@ -158,6 +164,9 @@ void SearchWidget::hidePagination()
 
 void SearchWidget::nextPageClicked()
 {
+
+    deleteAllSubWidget();
+
     int nextPageNum = currentPageNum + 1;
     currentPageNum++;
 
@@ -177,6 +186,9 @@ void SearchWidget::nextPageClicked()
 
 void SearchWidget::prePageClicked()
 {
+
+    deleteAllSubWidget();
+
     int prePageNum = currentPageNum - 1;
     currentPageNum--;
 
@@ -196,6 +208,9 @@ void SearchWidget::prePageClicked()
 
 void SearchWidget::gotoGoalPage()
 {
+
+    deleteAllSubWidget();
+
     int goalPageNum = this->ui->goalPageLineEdit->text().toInt();
     if(goalPageNum < 1 && goalPageNum > totalPageNum)
     {
