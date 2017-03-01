@@ -228,7 +228,7 @@ color:rgb(104,104,104);</string>
     <widget class="MyLabel" name="nextPageLabel">
      <property name="geometry">
       <rect>
-       <x>380</x>
+       <x>340</x>
        <y>200</y>
        <width>70</width>
        <height>16</height>
@@ -255,9 +255,9 @@ QLabel:hover{
     <widget class="QLabel" name="currentPageLabel">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>260</x>
        <y>200</y>
-       <width>101</width>
+       <width>61</width>
        <height>20</height>
       </rect>
      </property>
@@ -265,13 +265,16 @@ QLabel:hover{
       <string notr="true">color: rgb(173, 173, 173);</string>
      </property>
      <property name="text">
-      <string>当前第1页,共1页</string>
+      <string>1/1</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="QLineEdit" name="goalPageLineEdit">
      <property name="geometry">
       <rect>
-       <x>470</x>
+       <x>430</x>
        <y>200</y>
        <width>31</width>
        <height>16</height>
@@ -281,7 +284,7 @@ QLabel:hover{
     <widget class="QPushButton" name="goPageNumButton">
      <property name="geometry">
       <rect>
-       <x>510</x>
+       <x>470</x>
        <y>200</y>
        <width>31</width>
        <height>16</height>
@@ -306,7 +309,7 @@ color:white;</string>
     <widget class="MyLabel" name="prePageLabel">
      <property name="geometry">
       <rect>
-       <x>140</x>
+       <x>170</x>
        <y>200</y>
        <width>70</width>
        <height>16</height>

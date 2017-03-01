@@ -1,7 +1,11 @@
-﻿#include "searchwidget.h"
+#include "searchwidget.h"
 #include "ui_searchwidget.h"
 
 #include "userorgroupitem.h"
+#include <string>
+#include <QTextCodec>
+
+using std::string;
 
 
 SearchWidget::SearchWidget(QWidget *parent) :
@@ -28,6 +32,9 @@ SearchWidget::SearchWidget(QWidget *parent) :
     //关联翻页按钮点击
     connect(this->ui->prePageLabel, SIGNAL(clicked()), this, SLOT(prePageClicked()));
     connect(this->ui->nextPageLabel, SIGNAL(clicked()), this, SLOT(nextPageClicked()));
+
+    //关联前进到目标页面按钮
+    connect(this->ui->goPageNumButton, SIGNAL(clicked(bool)), this, SLOT(gotoGoalPage()));
 
 }
 
@@ -136,10 +143,9 @@ void SearchWidget::showPagination()
     this->ui->goalPageLineEdit->show();
     this->ui->goPageNumButton->show();
 
-    QString pageText = "当前第%1页,共%2页"; //这样总是乱码
+    //由于QT对中文格式化还是有点问题，故这里不用 当前第X页，共X页
+    QString pageText = QString("%1 / %2");
     this->ui->currentPageLabel->setText(pageText.arg(currentPageNum).arg(totalPageNum));
-
-    qDebug()<<pageText;
 }
 
 void SearchWidget::hidePagination()
@@ -164,6 +170,9 @@ void SearchWidget::nextPageClicked()
     {
         showOnWidget(nextPageNum);
     }
+
+    QString pageText = QString("%1 / %2");
+    this->ui->currentPageLabel->setText(pageText.arg(currentPageNum).arg(totalPageNum));
 }
 
 void SearchWidget::prePageClicked()
@@ -180,6 +189,9 @@ void SearchWidget::prePageClicked()
     {
         showOnWidget(prePageNum);
     }
+
+    QString pageText = QString("%1 / %2");
+    this->ui->currentPageLabel->setText(pageText.arg(currentPageNum).arg(totalPageNum));
 }
 
 void SearchWidget::gotoGoalPage()
@@ -188,10 +200,15 @@ void SearchWidget::gotoGoalPage()
     if(goalPageNum < 1 && goalPageNum > totalPageNum)
     {
         showOnWidget(1);
+        currentPageNum = 1;
     }
     else
     {
         showOnWidget(goalPageNum);
+        currentPageNum = goalPageNum;
     }
+
+    QString pageText = QString("%1 / %2");
+    this->ui->currentPageLabel->setText(pageText.arg(currentPageNum).arg(totalPageNum));
 }
 
