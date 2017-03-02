@@ -85,5 +85,6 @@
         <file>images/icon_last_normal.png</file>
         <file>images/icon_last_selected.png</file>
         <file>images/touxiang01.jpg</file>
+        <file>images/DefGroupHeadPic.jpg</file>
     </qresource>
 </RCC>

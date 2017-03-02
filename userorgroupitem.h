@@ -16,6 +16,9 @@ public:
     ~UserOrGroupItem();
     void setNameLabelText(const QString & itemName);
 
+    //当搜索为群组的时候，需要把头像改为群组头像，添加按钮内容改为加入
+    void changeGroupSomething();
+
 private:
     Ui::UserOrGroupItem *ui;
 };

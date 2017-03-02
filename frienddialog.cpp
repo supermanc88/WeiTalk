@@ -43,7 +43,12 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
 
     setAttribute(Qt::WA_QuitOnClose, true);
 
-    setWindowFlags(Qt::FramelessWindowHint); //隐藏标题栏
+    /*
+     * 隐藏标题栏和保持在最上
+     * 保持在最上是因为靠边收起后，还可以激活
+     */
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+
 
 //    this->hide();
 

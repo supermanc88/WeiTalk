@@ -14,6 +14,13 @@ class SearchWidget : public QWidget
     Q_OBJECT
 
 public:
+    enum FindType
+    {
+        FindUser,       //找人
+        FindGroup,      //找群
+    };
+
+public:
     explicit SearchWidget(QWidget *parent = 0);
     ~SearchWidget();
 
@@ -37,15 +44,25 @@ public slots:
 
     void gotoGoalPage();//跳转到目标页面相应
 
+    void findUserLabelClicked();//查找好友Label被点击
+
+    void findGroupLabelClicked();//查找群组Label被点击
+
 private:
     Ui::SearchWidget *ui;
+
     QList<user_info_t> userList;
+    QList<group_info_t> groupList;
+
     WeiTalkServerAPI WTAPI;
 //    QGridLayout * gridLayout;
     QList<QWidget *> userListTemp;
 
     int currentPageNum;  //当前页数
     int totalPageNum; //总页数
+
+
+    FindType m_findType; //查找类型
 };
 
 #endif // SEARCHWIDGET_H

@@ -17,3 +17,9 @@ void UserOrGroupItem::setNameLabelText(const QString &itemName)
 {
     this->ui->nameLabel->setText(itemName);
 }
+
+void UserOrGroupItem::changeGroupSomething()
+{
+    this->ui->picLabel->setStyleSheet(QStringLiteral("image: url(:/images/DefGroupHeadPic.jpg);"));
+    this->ui->addContactButton->setText("+加入");
+}

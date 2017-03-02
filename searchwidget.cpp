@@ -18,6 +18,9 @@ SearchWidget::SearchWidget(QWidget *parent) :
 
     setAttribute(Qt::WA_QuitOnClose, false);
 
+    //默认查找类型为finduser
+    m_findType = FindUser;
+
     hidePagination();
 
     currentPageNum = 1;  //默认第一页
@@ -36,6 +39,10 @@ SearchWidget::SearchWidget(QWidget *parent) :
     //关联前进到目标页面按钮
     connect(this->ui->goPageNumButton, SIGNAL(clicked(bool)), this, SLOT(gotoGoalPage()));
 
+    //关联查找用户还是查找群的按钮
+    connect(this->ui->findUserLabel, SIGNAL(clicked()), this, SLOT(findUserLabelClicked()));
+    connect(this->ui->findGroupLabel, SIGNAL(clicked()), this, SLOT(findGroupLabelClicked()));
+
 }
 
 SearchWidget::~SearchWidget()
@@ -46,8 +53,6 @@ SearchWidget::~SearchWidget()
 void SearchWidget::searchUserOrGroup()
 {
     //先判断现在是搜索用户还是群组
-    //目前默认搜索群组
-
     QString searchContent = this->ui->lineEdit->text();
     if(searchContent.isEmpty())
     {
@@ -55,7 +60,17 @@ void SearchWidget::searchUserOrGroup()
         return;
     }
     qDebug()<<"查找内容"<<searchContent;
-    searchUser(searchContent);
+
+    //判断搜索用户还是搜索群组
+    if(m_findType == FindUser)
+    {
+        searchUser(searchContent);
+    }
+    else if (m_findType == FindGroup)
+    {
+        searchGroup(searchContent);
+    }
+
 }
 
 void SearchWidget::searchUser(const QString &searchContent)
@@ -86,7 +101,26 @@ void SearchWidget::searchUser(const QString &searchContent)
 
 void SearchWidget::searchGroup(const QString &searchContent)
 {
+    groupList.clear();
+    currentPageNum = 1;
+    totalPageNum = 1;
 
+    deleteAllSubWidget();
+    hidePagination(); //隐藏分页
+
+    WTAPI.SelectGroupText(searchContent, &groupList);
+
+    totalPageNum = ceil(groupList.size() / 6.0);//向上取整
+
+    if(totalPageNum == 1)
+    {
+        showOnWidget(1); //默认显示1页
+    }
+    else
+    {
+        showPagination(); //如果页数大于一页，就显示分页
+        showOnWidget(1);
+    }
 }
 
 void SearchWidget::showOnWidget(int pageNum)
@@ -96,27 +130,56 @@ void SearchWidget::showOnWidget(int pageNum)
 
 //    deleteAllSubWidget();
 
-    int i=0;
-    for(; listStart<userList.size() && listStart<listEnd; listStart++)
+    if(m_findType == FindUser)
     {
-        int j= i%3;
-
-        UserOrGroupItem * item1 = new UserOrGroupItem;
-
-        userListTemp.append(item1);
-
-        item1->setNameLabelText(userList.at(listStart).acUserName);
-        if(i >= 3)
+        int i=0;
+        for(; listStart<userList.size() && listStart<listEnd; listStart++)
         {
-            this->ui->gridLayout->addWidget(item1, 1, j, 1, 1);
-        }
-        else
-        {
-            this->ui->gridLayout->addWidget(item1, 0, j, 1, 1);
-        }
+            int j= i%3;
 
-        i++; //控制行
+            UserOrGroupItem * item1 = new UserOrGroupItem;
+
+            userListTemp.append(item1);
+
+            item1->setNameLabelText(userList.at(listStart).acUserName);
+            if(i >= 3)
+            {
+                this->ui->gridLayout->addWidget(item1, 1, j, 1, 1);
+            }
+            else
+            {
+                this->ui->gridLayout->addWidget(item1, 0, j, 1, 1);
+            }
+
+            i++; //控制行
+        }
     }
+    else if (m_findType == FindGroup)
+    {
+        int i=0;
+        for(; listStart<groupList.size() && listStart<listEnd; listStart++)
+        {
+            int j= i%3;
+
+            UserOrGroupItem * item1 = new UserOrGroupItem;
+            item1->changeGroupSomething();
+
+            userListTemp.append(item1);
+
+            item1->setNameLabelText(groupList.at(listStart).acGroupName);
+            if(i >= 3)
+            {
+                this->ui->gridLayout->addWidget(item1, 1, j, 1, 1);
+            }
+            else
+            {
+                this->ui->gridLayout->addWidget(item1, 0, j, 1, 1);
+            }
+
+            i++; //控制行
+        }
+    }
+
 
 }
 
@@ -223,6 +286,41 @@ void SearchWidget::gotoGoalPage()
         currentPageNum = goalPageNum;
     }
 
+    QString pageText = QString("%1 / %2");
+    this->ui->currentPageLabel->setText(pageText.arg(currentPageNum).arg(totalPageNum));
+}
+
+void SearchWidget::findUserLabelClicked()
+{
+    m_findType = FindUser;
+    this->ui->findUserLabel->setStyleSheet(QLatin1String("color:white;\n"
+                                                         "font-weight:bold;\n"
+                                                         "font-size:16px;\n"
+                                                         "\n"
+                                                         ""));
+    this->ui->findGroupLabel->setStyleSheet(QStringLiteral("color: rgb(255, 255, 255);"));
+    deleteAllSubWidget();
+    hidePagination();
+    currentPageNum = 1;
+    totalPageNum = 1;
+    QString pageText = QString("%1 / %2");
+    this->ui->currentPageLabel->setText(pageText.arg(currentPageNum).arg(totalPageNum));
+}
+
+void SearchWidget::findGroupLabelClicked()
+{
+    m_findType = FindGroup;
+
+    this->ui->findUserLabel->setStyleSheet(QStringLiteral("color: rgb(255, 255, 255);"));
+    this->ui->findGroupLabel->setStyleSheet(QLatin1String("color:white;\n"
+                                                         "font-weight:bold;\n"
+                                                         "font-size:16px;\n"
+                                                         "\n"
+                                                         ""));
+    deleteAllSubWidget();
+    hidePagination();
+    currentPageNum = 1;
+    totalPageNum = 1;
     QString pageText = QString("%1 / %2");
     this->ui->currentPageLabel->setText(pageText.arg(currentPageNum).arg(totalPageNum));
 }
