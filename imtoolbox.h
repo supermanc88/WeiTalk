@@ -5,6 +5,7 @@
 
 class QVBoxLayout;
 class IMToolItem;
+class GroupToolItem;
 
 class IMToolBox : public QWidget
 {
@@ -12,6 +13,8 @@ class IMToolBox : public QWidget
 public:
     explicit IMToolBox(QWidget *parent = 0);
     void addItem(IMToolItem * item);
+
+    void addItem(GroupToolItem * item);
 
 signals:
 

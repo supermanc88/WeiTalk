@@ -12,13 +12,13 @@ SingleChat::SingleChat(const QString& bareJid, QWidget *parent) :
     setAttribute(Qt::WA_QuitOnClose, false);
 
     setWindowFlags(Qt::FramelessWindowHint);
-    ui->slideNavigation->setFixed(true);
-    ui->slideNavigation->setOrientation(Qt::Vertical);
-    ui->slideNavigation->addItem("111111");
-    ui->slideNavigation->addItem("222222");
-    ui->slideNavigation->addItem("333333");
-    ui->slideNavigation->addItem("444444");
-    ui->slideNavigation->addItem("555555");
+//    ui->slideNavigation->setFixed(true);
+//    ui->slideNavigation->setOrientation(Qt::Vertical);
+//    ui->slideNavigation->addItem("111111");
+//    ui->slideNavigation->addItem("222222");
+//    ui->slideNavigation->addItem("333333");
+//    ui->slideNavigation->addItem("444444");
+//    ui->slideNavigation->addItem("555555");
 
     connect(ui->myLabel, SIGNAL(clicked()), this, SLOT(ShowMinimize()));
     connect(ui->myLabel_2, SIGNAL(clicked()), this, SLOT(CloseCurrentWindow()));

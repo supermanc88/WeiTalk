@@ -13,7 +13,7 @@ IMToolItem::IMToolItem(const QString &title, QWidget *parent) : QWidget(parent)
     m_btn = new ListButton(title);
     m_layout = new QVBoxLayout;
 
-    m_itemList = new QList<FriendItem *>;
+    m_itemList = new QList<QWidget *>;
 
     m_isVisible = false;  //默认不显示
 
@@ -27,15 +27,18 @@ IMToolItem::IMToolItem(const QString &title, QWidget *parent) : QWidget(parent)
     connect(this, SIGNAL(showChatDialog(QString)), this, SLOT(showItemChatDialog(QString)));
 }
 
-void IMToolItem::addItem(FriendItem *item)
+void IMToolItem::addItem(QWidget *item)
 {
     m_itemList->append(item);
+
     //绑定删除好友信号
     connect(item, SIGNAL(removeContact(QString)), this, SIGNAL(removeContact(QString)));
     //绑定打开聊天窗口信号
     connect(item, SIGNAL(showChatDialog(QString)), this, SIGNAL(showChatDialog(QString)));
 
     m_layout->addWidget(item);
+
+    qDebug()<<"add item...";
 
     if(m_itemList->size() == 0)
     {

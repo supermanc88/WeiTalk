@@ -23,7 +23,7 @@ class IMToolItem : public QWidget
 public:
     explicit IMToolItem(const QString &title, QWidget *parent = 0);
 
-    void addItem(FriendItem * item);  //添加好友列
+    void addItem(QWidget * item);  //添加好友列
 
 
 signals:
@@ -51,7 +51,7 @@ private:
     ListButton * m_btn;  //用来接收title  定义分组名称
     QVBoxLayout * m_layout; //好友列表布局
     bool m_isVisible; //用来下拉是否显示
-    QList<FriendItem *> * m_itemList;  //用来存储好友列表
+    QList<QWidget *> * m_itemList;  //用来存储好友列表
 
 
     //使用QMap存储好友列表吧，便于后面的搜索

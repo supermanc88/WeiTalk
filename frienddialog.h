@@ -8,6 +8,9 @@
 #include "logindialog.h"
 #include "imtoolitem.h"
 
+class FriendListArea;
+class GroupListArea;
+
 namespace Ui {
 class FriendDialog;
 }
@@ -78,6 +81,15 @@ public slots:
 
 /***************************************************/
 
+    //单人聊天列表
+    void showSingleChatList();
+
+    //群组聊天列表
+    void showGroupChatList();
+
+    //临时聊天列表
+    void showTemporaryChatList();
+
 private:
     bool m_moving;
     QPoint m_movePosition;
@@ -87,6 +99,10 @@ private:
     LoginDialog * m_loginDialog;
 
     IMToolItem * m_item1;
+
+    FriendListArea * m_friendListArea;
+
+    GroupListArea * m_groupListArea;
 
 
     Direction m_direction; //隐藏方向

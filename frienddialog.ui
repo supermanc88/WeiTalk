@@ -89,7 +89,7 @@ QLabel:hover{
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QLabel" name="label_3">
+     <widget class="MyLabel" name="myLabel_3">
       <property name="styleSheet">
        <string notr="true">QLabel{
 image: url(:/images/icon_contacts_normal.png);
@@ -98,13 +98,10 @@ QLabel:hover{
 image: url(:/images/icon_contacts_selected.png);
 }</string>
       </property>
-      <property name="text">
-       <string/>
-      </property>
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="label_4">
+     <widget class="MyLabel" name="myLabel_4">
       <property name="styleSheet">
        <string notr="true">QLabel{
 image: url(:/images/icon_group_normal.png);
@@ -113,13 +110,10 @@ QLabel:hover{
 image: url(:/images/icon_group_selected.png);
 }</string>
       </property>
-      <property name="text">
-       <string/>
-      </property>
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="label_5">
+     <widget class="MyLabel" name="myLabel_5">
       <property name="styleSheet">
        <string notr="true">QLabel{
 image: url(:/images/icon_last_normal.png);
@@ -128,23 +122,9 @@ QLabel:hover{
 image: url(:/images/icon_last_selected.png);
 }</string>
       </property>
-      <property name="text">
-       <string/>
-      </property>
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QWidget" name="verticalLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>200</y>
-     <width>251</width>
-     <height>381</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="friendAreaLayout"/>
   </widget>
   <widget class="MyLabel" name="myLabel">
    <property name="geometry">
@@ -242,6 +222,54 @@ QLabel:hover{
    <property name="alignment">
     <set>Qt::AlignCenter</set>
    </property>
+  </widget>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>199</y>
+     <width>251</width>
+     <height>381</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="page1">
+    <widget class="QWidget" name="verticalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>-1</x>
+       <y>-1</y>
+       <width>251</width>
+       <height>381</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="friendAreaLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_2">
+    <widget class="QWidget" name="verticalLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>9</x>
+       <y>9</y>
+       <width>231</width>
+       <height>371</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="groupAreaLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_3"/>
   </widget>
  </widget>
  <customwidgets>

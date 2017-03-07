@@ -1,6 +1,7 @@
 #include "imtoolbox.h"
 #include <QVBoxLayout>
 #include "imtoolitem.h"
+#include "grouptoolitem.h"
 
 IMToolBox::IMToolBox(QWidget *parent) : QWidget(parent),
     m_layout(new QVBoxLayout)
@@ -11,6 +12,11 @@ IMToolBox::IMToolBox(QWidget *parent) : QWidget(parent),
 }
 
 void IMToolBox::addItem(IMToolItem *item)
+{
+    m_layout->addWidget(item);
+}
+
+void IMToolBox::addItem(GroupToolItem *item)
 {
     m_layout->addWidget(item);
 }

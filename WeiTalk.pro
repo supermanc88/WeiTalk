@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 QXMPP_INCLUDEPATH = $$PWD/qxmpp/base $$PWD/qxmpp/client $$PWD/qxmpp/server
-QXMPP_LIB = $$PWD/qxmpp/LIB/qxmpp_d0.lib
+QXMPP_LIB = $$PWD/qxmpp/LIB/libqxmpp_d0.a
 
 INCLUDEPATH += $$QXMPP_INCLUDEPATH
 LIBS += $$QXMPP_LIB
@@ -27,13 +27,15 @@ SOURCES += main.cpp \
     friendlistarea.cpp \
     singlechat.cpp \
     wechat.cpp \
-    slidenavigation/slidenavigation.cpp \
     slidenavigation.cpp \
     checkmsg.cpp \
     searchwidget.cpp \
     mylabel.cpp \
     weitalkserverapi.cpp \
-    userorgroupitem.cpp
+    userorgroupitem.cpp \
+    grouplistarea.cpp \
+    grouptoolitem.cpp \
+    groupitem.cpp
 
 HEADERS  += \
     logindialog.h \
@@ -45,13 +47,15 @@ HEADERS  += \
     friendlistarea.h \
     singlechat.h \
     wechat.h \
-    slidenavigation/slidenavigation.h \
     slidenavigation.h \
     checkmsg.h \
     searchwidget.h \
     mylabel.h \
     weitalkserverapi.h \
-    userorgroupitem.h
+    userorgroupitem.h \
+    grouplistarea.h \
+    grouptoolitem.h \
+    groupitem.h
 
 
 FORMS += \
@@ -63,7 +67,9 @@ FORMS += \
     wechat.ui \
     checkmsg.ui \
     searchwidget.ui \
-    userorgroupitem.ui
+    userorgroupitem.ui \
+    grouplistarea.ui \
+    groupitem.ui
 
 RESOURCES += \
     faces.qrc \

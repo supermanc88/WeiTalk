@@ -21,6 +21,10 @@
 
 #include "searchwidget.h"
 
+#include "groupitem.h"
+#include "grouptoolitem.h"
+#include "grouplistarea.h"
+
 
 /*
  * 目前这样可以移动整个窗口，先做个样子，后期可以把头部单独拿出来
@@ -63,20 +67,38 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
 
     this->m_moving  = false;
 
-    FriendListArea * m_friendListArea = new FriendListArea;
+    m_friendListArea = new FriendListArea;
     m_friendListArea->adjustSize();
 
+    m_groupListArea = new GroupListArea;
 
+    /********************************************************************************************/
+    IMToolBox * m_box2 = new IMToolBox;
+    GroupToolItem * m_groupItme = new GroupToolItem("我的群组");
+    m_box2->addItem(m_groupItme);
+
+    m_groupItme->addItem(new GroupItem);
+    m_groupItme->addItem(new GroupItem);
+    m_groupItme->addItem(new GroupItem);
+    m_groupItme->addItem(new GroupItem);
+    m_groupItme->addItem(new GroupItem);
+    m_groupItme->addItem(new GroupItem);
+
+    this->m_groupListArea->addItem(m_box2);
+    this->groupAreaLayout->addWidget(m_groupListArea);
+
+    /*******************************************************************************************/
 
     IMToolBox * m_box1 = new IMToolBox;
     m_item1 = new IMToolItem("title1");
 
     m_box1->addItem(m_item1);
 
-
-
     m_friendListArea->addItem(m_box1);
 
+    //初始化显示好友
+    this->stackedWidget->setCurrentIndex(0);
+    this->myLabel_3->setStyleSheet(QStringLiteral("image: url(:/images/icon_contacts_selected.png);"));
 
     this->friendAreaLayout->addWidget(m_friendListArea);
 
@@ -100,6 +122,16 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
 
     //显示查找好友群组界面
     connect(this->searchButton, SIGNAL(clicked()), this, SLOT(showSearchUserOrGroup()));
+
+    /*************关联单聊、群聊、历史聊天三个按钮******************/
+
+    connect(this->myLabel_3, SIGNAL(clicked()), this, SLOT(showSingleChatList()));
+
+    connect(this->myLabel_4, SIGNAL(clicked()), this, SLOT(showGroupChatList()));
+
+    connect(this->myLabel_5, SIGNAL(clicked()), this, SLOT(showTemporaryChatList()));
+
+    /**********************************************/
 }
 
 void FriendDialog::mousePressEvent(QMouseEvent *event)
@@ -383,5 +415,33 @@ void FriendDialog::enterEvent(QEvent *event)
     {
         showWidget();
     }
+}
+
+void FriendDialog::showSingleChatList()
+{
+
+    this->stackedWidget->setCurrentIndex(0);
+    this->myLabel_3->setStyleSheet(QStringLiteral("image: url(:/images/icon_contacts_selected.png);"));
+    this->myLabel_4->setStyleSheet(QStringLiteral("image: url(:/images/icon_group_normal.png);"));
+    this->myLabel_5->setStyleSheet(QStringLiteral("image: url(:/images/icon_last_normal.png);"));
+
+}
+
+void FriendDialog::showGroupChatList()
+{
+    this->stackedWidget->setCurrentIndex(1);
+    this->myLabel_3->setStyleSheet(QStringLiteral("image: url(:/images/icon_contacts_normal.png);"));
+    this->myLabel_4->setStyleSheet(QStringLiteral("image: url(:/images/icon_group_selected.png);"));
+    this->myLabel_5->setStyleSheet(QStringLiteral("image: url(:/images/icon_last_normal.png);"));
+
+
+}
+
+void FriendDialog::showTemporaryChatList()
+{
+    this->stackedWidget->setCurrentIndex(2);
+    this->myLabel_3->setStyleSheet(QStringLiteral("image: url(:/images/icon_contacts_normal.png);"));
+    this->myLabel_4->setStyleSheet(QStringLiteral("image: url(:/images/icon_group_normal.png);"));
+    this->myLabel_5->setStyleSheet(QStringLiteral("image: url(:/images/icon_last_selected.png);"));
 }
 

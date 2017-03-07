@@ -6,6 +6,8 @@
 #include "frienddialog.h"
 #include <QDebug>
 
+//#include "groupitem.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +18,9 @@ int main(int argc, char *argv[])
 
     FriendDialog w;
     w.runApp();
+
+//    GroupItem w;
+//    w.show();
 
     return a.exec();
 }
