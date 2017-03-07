@@ -37,6 +37,21 @@ void GroupToolItem::addItem(QWidget *item)
     }
 }
 
+GroupItem *GroupToolItem::getOrCreateItem(QString groupName)
+{
+    if(m_groupsMap.contains(groupName))
+    {
+        return m_groupsMap[groupName];
+    }
+    else
+    {
+        GroupItem * item = new GroupItem(groupName);
+        m_groupsMap[groupName] = item;
+        addItem(item);
+        return item;
+    }
+}
+
 void GroupToolItem::listShowOrHide()
 {
     for(int i=0; i<m_itemList->size(); i++)

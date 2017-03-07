@@ -13,6 +13,7 @@ class GroupItem : public QWidget
 
 public:
     explicit GroupItem(QWidget *parent = 0);
+    explicit GroupItem(QString groupName, QWidget *parent = 0);
     ~GroupItem();
 
 private:

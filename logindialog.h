@@ -10,6 +10,8 @@
 
 #include "QXmppClient.h"
 
+
+
 namespace Ui {
 class LoginDialog;
 }

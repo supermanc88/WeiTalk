@@ -2,6 +2,8 @@
 #define GROUPTOOLITEM_H
 
 #include <QWidget>
+#include "groupitem.h"
+#include <QMap>
 
 class ListButton;
 class QVBoxLayout;
@@ -14,6 +16,9 @@ public:
 
     void addItem(QWidget * item);
 
+    GroupItem * getOrCreateItem(QString groupName);
+
+
 signals:
 
 public slots:
@@ -23,7 +28,9 @@ private:
     ListButton *m_btn;
     QVBoxLayout * m_layout;
     bool m_isVisiable;
-    QList<QWidget *> * m_itemList;
+    QList<QWidget *> * m_itemList;  //存储群组列表
+
+    QMap<QString, GroupItem *> m_groupsMap;
 
 };
 

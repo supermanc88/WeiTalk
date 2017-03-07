@@ -7,9 +7,12 @@
 #include "QXmppClient.h"
 #include "logindialog.h"
 #include "imtoolitem.h"
+#include "weitalkserverapi.h"
 
 class FriendListArea;
 class GroupListArea;
+class GroupToolItem;
+
 
 namespace Ui {
 class FriendDialog;
@@ -61,6 +64,9 @@ public slots:
     //显示查找好友、群组界面
     void showSearchUserOrGroup();
 
+    //获取已经加入的群组列表
+    void getGroupList();
+
 
 /***************************************************
  * 窗口自动隐藏功能函数
@@ -99,6 +105,7 @@ private:
     LoginDialog * m_loginDialog;
 
     IMToolItem * m_item1;
+    GroupToolItem * m_groupItme;
 
     FriendListArea * m_friendListArea;
 
@@ -109,6 +116,12 @@ private:
     bool m_isAutoHide;//是否自动隐藏
 
     int m_desktopWidth; //桌面宽度
+
+
+    WeiTalkServerAPI WTAPI;
+
+    QList<group_info_t> * groupList;
+
 };
 
 #endif // FRIENDDIALOG_H

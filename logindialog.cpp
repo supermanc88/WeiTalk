@@ -20,7 +20,7 @@
  * 在主窗口设置为true，别的窗口设置为false
  * 当关闭主窗口时，所有的窗口也将被关闭
  */
-
+QString LoginUserName;
 
 LoginDialog::LoginDialog(QXmppClient *xmppClient, QWidget *parent) : QDialog(parent)
 {
@@ -193,6 +193,9 @@ void LoginDialog::signIn()
 {
     QString userName = this->UserNameLineEdit->text();
     QString passwd = this->PasswordLineEdit->text();
+
+    LoginUserName = userName;
+
     //userName 需要进行拼接
     QString bareJid = userName + QString("@im.weitainet.com/gloox");
 

@@ -127,3 +127,42 @@ void WeiTalkServerAPI::SelectGroupText(const QString groupName, QList<group_info
 
     }
 }
+
+void WeiTalkServerAPI::SelectGroupList(const QString username, QList<group_info_t> *groupList)
+{
+    QString url = "http://api.weitainet.com/router/rest?method=weitai.im.search&username=%1";
+
+    QByteArray responseData = getHtml(url.arg(username));
+
+    QJsonDocument d = QJsonDocument::fromJson(responseData);
+
+    QJsonObject obj = d.object();
+
+    if(obj.contains("rows"))
+    {
+        QJsonArray rows = obj["rows"].toArray();
+        if(rows.size() == 0)
+        {
+            return;
+        }
+
+        for(int i = 0; i < rows.size(); i++)
+        {
+            group_info_t groupInfo;
+
+            if(rows[i].isObject())
+            {
+                QJsonObject subObj = rows[i].toObject();
+                QVariantMap objMap = subObj.toVariantMap();
+
+                groupInfo.acGroupName = objMap["groupname"].toString();
+                groupInfo.acGroupOwn = objMap["creater"].toString();
+                groupInfo.acDescription = objMap["fingermemo"].toString();
+                groupInfo.nGroupCount = objMap["num"].toInt();
+                groupInfo.nGroupId = objMap["groupid"].toInt();
+            }
+
+            groupList->append(groupInfo);
+        }
+    }
+}

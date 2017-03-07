@@ -36,8 +36,12 @@ public:
 
     //查找好友
     static void SelectUserText(const QString username, QList<user_info_t> * userList);
+
     //查找群组
     static void SelectGroupText(const QString groupName, QList<group_info_t> * groupList);
+
+    //获取已加入群组列表
+    static void SelectGroupList(const QString username, QList<group_info_t> * groupList);
 
 
 signals:

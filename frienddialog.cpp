@@ -26,6 +26,8 @@
 #include "grouplistarea.h"
 
 
+extern QString LoginUserName;
+
 /*
  * 目前这样可以移动整个窗口，先做个样子，后期可以把头部单独拿出来
  * 做一个Dialog 然后重写鼠标事件，再把那个Dialog添加到本Dialog
@@ -54,6 +56,8 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 
 
+    groupList = new QList<group_info_t>;
+
 //    this->hide();
 
     //获取桌面宽度
@@ -74,15 +78,8 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
 
     /********************************************************************************************/
     IMToolBox * m_box2 = new IMToolBox;
-    GroupToolItem * m_groupItme = new GroupToolItem("我的群组");
+    m_groupItme = new GroupToolItem("我的群组");
     m_box2->addItem(m_groupItme);
-
-    m_groupItme->addItem(new GroupItem);
-    m_groupItme->addItem(new GroupItem);
-    m_groupItme->addItem(new GroupItem);
-    m_groupItme->addItem(new GroupItem);
-    m_groupItme->addItem(new GroupItem);
-    m_groupItme->addItem(new GroupItem);
 
     this->m_groupListArea->addItem(m_box2);
     this->groupAreaLayout->addWidget(m_groupListArea);
@@ -122,6 +119,9 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
 
     //显示查找好友群组界面
     connect(this->searchButton, SIGNAL(clicked()), this, SLOT(showSearchUserOrGroup()));
+
+    //登录连接后获取群组列表
+    connect(this->m_xmppClient, SIGNAL(connected()), this, SLOT(getGroupList()));
 
     /*************关联单聊、群聊、历史聊天三个按钮******************/
 
@@ -308,6 +308,18 @@ void FriendDialog::showSearchUserOrGroup()
 {
     SearchWidget * searchWidget = new SearchWidget;
     searchWidget->show();
+}
+
+void FriendDialog::getGroupList()
+{
+    qDebug()<<LoginUserName<<"username................";
+    WTAPI.SelectGroupList(LoginUserName, groupList);
+
+    QList<group_info_t>::iterator group;
+    for(group=groupList->begin(); group!=groupList->end(); group++)
+    {
+        m_groupItme->getOrCreateItem((*group).acGroupName);
+    }
 }
 
 /*
