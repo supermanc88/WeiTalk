@@ -35,7 +35,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="groupName">
    <property name="geometry">
     <rect>
      <x>110</x>

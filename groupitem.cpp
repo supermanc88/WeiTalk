@@ -15,10 +15,21 @@ GroupItem::GroupItem(QString groupName, QWidget *parent) :
     ui(new Ui::GroupItem)
 {
     ui->setupUi(this);
-    ui->label_2->setText(groupName); //更新群名
+    ui->groupName->setText(groupName); //更新群名
 }
 
 GroupItem::~GroupItem()
 {
     delete ui;
+}
+
+QString GroupItem::getGroupName() const
+{
+    return groupName;
+}
+
+void GroupItem::setGroupName(const QString &value)
+{
+    groupName = value;
+    ui->groupName->setText(groupName);
 }

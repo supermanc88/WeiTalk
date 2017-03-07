@@ -16,8 +16,13 @@ public:
     explicit GroupItem(QString groupName, QWidget *parent = 0);
     ~GroupItem();
 
+    QString getGroupName() const;
+    void setGroupName(const QString &value);
+
 private:
     Ui::GroupItem *ui;
+
+    QString groupName;
 };
 
 #endif // GROUPITEM_H
