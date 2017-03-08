@@ -26,6 +26,16 @@ typedef struct group_info_s
     unsigned int nGroupId;      //群组ID
 }group_info_t;
 
+typedef struct group_member_s
+{
+    int authority;//权限
+    QString username; //用户名
+    QString remark;//未知的
+    QString nickname;//昵称
+    int userid;//用户id
+    int groupid; //群组id
+}group_member_t;
+
 class WeiTalkServerAPI : public QObject
 {
     Q_OBJECT
@@ -42,6 +52,17 @@ public:
 
     //获取已加入群组列表
     static void SelectGroupList(const QString username, QList<group_info_t> * groupList);
+
+    /**
+     * @brief SelectGroupUserList
+     * @param groupId                   群组ID
+     * @param groupMemberList           用来返回群组成员列表
+     * @param memberCount               用来返回群组成员数量
+     *
+     * 获取群组中的成员
+     */
+    static void SelectGroupUserList(unsigned int groupId, QList<group_member_t> * groupMemberList, int& memberCount);
+
 
 
 signals:

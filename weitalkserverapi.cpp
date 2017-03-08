@@ -166,3 +166,40 @@ void WeiTalkServerAPI::SelectGroupList(const QString username, QList<group_info_
         }
     }
 }
+
+void WeiTalkServerAPI::SelectGroupUserList(unsigned int groupId, QList<group_member_t> *groupMemberList, int& memberCount)
+{
+    QString url = "http://api.weitainet.com/router/rest?method=weitai.im.getgrouplist&groupid=%1";
+
+    QByteArray responseData = getHtml(url.arg(groupId));
+
+    QJsonDocument d = QJsonDocument::fromJson(responseData);
+
+    QJsonObject obj = d.object();
+
+    if(obj.contains("model"))
+    {
+        QJsonArray models = obj["model"].toArray();
+
+        memberCount = models.size();
+
+        for(int i=0; i<models.size(); i++)
+        {
+            group_member_t member;
+            if(models[i].isObject())
+            {
+                QJsonObject subObj = models[i].toObject();
+                QVariantMap objMap = subObj.toVariantMap();
+
+                member.authority = objMap["authority"].toInt();
+                member.groupid = objMap["groupid"].toInt();
+                member.nickname = objMap["nickname"].toString();
+                member.remark = objMap["remark"].toString();
+                member.userid = objMap["userid"].toInt();
+                member.username = objMap["username"].toString();
+            }
+            groupMemberList->append(member);
+        }
+    }
+
+}

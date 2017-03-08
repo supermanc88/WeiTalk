@@ -19,8 +19,11 @@ public:
     QString getGroupName() const;
     void setGroupName(const QString &value);
 
+    int getGroupId() const;
+    void setGroupId(int value);
+
 signals:
-    void showGroupChatDialog(QString groupName);
+    void showGroupChatDialog(QString groupName, int groupId);
 
 public slots:
     //重写双击事件，用来打开群组聊天
@@ -30,6 +33,7 @@ private:
     Ui::GroupItem *ui;
 
     QString groupName;
+    int groupId;
 };
 
 #endif // GROUPITEM_H

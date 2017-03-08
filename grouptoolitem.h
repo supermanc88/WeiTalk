@@ -16,13 +16,15 @@ public:
 
     void addItem(QWidget * item);
 
-    GroupItem * getOrCreateItem(QString groupName);
+    GroupItem * getOrCreateItem(QString groupName, int groupId);
 
 
 signals:
 
 public slots:
     void listShowOrHide();
+
+    void showGroupChatDialog(QString groupName, int groupId);
 
 private:
     ListButton *m_btn;

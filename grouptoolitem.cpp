@@ -2,6 +2,7 @@
 
 #include <QVBoxLayout>
 #include "listbutton.h"
+#include "wechat.h"
 
 GroupToolItem::GroupToolItem(const QString& string, QWidget *parent) : QWidget(parent)
 {
@@ -25,6 +26,8 @@ void GroupToolItem::addItem(QWidget *item)
 {
     m_itemList->append(item);
 
+    connect(item, SIGNAL(showGroupChatDialog(QString,int)), this, SLOT(showGroupChatDialog(QString,int)));
+
     m_layout->addWidget(item);
 
     if(m_itemList->size() == 0)
@@ -37,7 +40,7 @@ void GroupToolItem::addItem(QWidget *item)
     }
 }
 
-GroupItem *GroupToolItem::getOrCreateItem(QString groupName)
+GroupItem *GroupToolItem::getOrCreateItem(QString groupName, int groupId)
 {
     if(m_groupsMap.contains(groupName))
     {
@@ -46,6 +49,7 @@ GroupItem *GroupToolItem::getOrCreateItem(QString groupName)
     else
     {
         GroupItem * item = new GroupItem(groupName);
+        item->setGroupId(groupId);
         m_groupsMap[groupName] = item;
         addItem(item);
         return item;
@@ -58,4 +62,15 @@ void GroupToolItem::listShowOrHide()
     {
         m_itemList->at(i)->setVisible(!(m_itemList->at(i)->isVisible()));
     }
+}
+
+void GroupToolItem::showGroupChatDialog(QString groupName, int groupId)
+{
+    WeChat * weChat = new WeChat(groupId);
+
+    weChat->setGroupName(groupName);
+    weChat->initGroupMemberList();
+
+    weChat->show();
+
 }

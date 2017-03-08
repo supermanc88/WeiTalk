@@ -17,6 +17,7 @@ GroupItem::GroupItem(QString groupName, QWidget *parent) :
 {
     ui->setupUi(this);
     ui->groupName->setText(groupName); //更新群名
+    groupId = 0;
 }
 
 GroupItem::~GroupItem()
@@ -38,5 +39,16 @@ void GroupItem::setGroupName(const QString &value)
 void GroupItem::mouseDoubleClickEvent(QMouseEvent *event)
 {
     QString m_groupName = getGroupName();
-    emit showGroupChatDialog(m_groupName);
+
+    emit showGroupChatDialog(m_groupName, groupId);
+}
+
+int GroupItem::getGroupId() const
+{
+    return groupId;
+}
+
+void GroupItem::setGroupId(int value)
+{
+    groupId = value;
 }

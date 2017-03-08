@@ -35,7 +35,8 @@ SOURCES += main.cpp \
     userorgroupitem.cpp \
     grouplistarea.cpp \
     grouptoolitem.cpp \
-    groupitem.cpp
+    groupitem.cpp \
+    groupmembermodel.cpp
 
 HEADERS  += \
     logindialog.h \
@@ -55,7 +56,8 @@ HEADERS  += \
     userorgroupitem.h \
     grouplistarea.h \
     grouptoolitem.h \
-    groupitem.h
+    groupitem.h \
+    groupmembermodel.h
 
 
 FORMS += \
@@ -69,7 +71,8 @@ FORMS += \
     searchwidget.ui \
     userorgroupitem.ui \
     grouplistarea.ui \
-    groupitem.ui
+    groupitem.ui \
+    groupmembermodel.ui
 
 RESOURCES += \
     faces.qrc \

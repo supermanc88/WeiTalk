@@ -25,6 +25,70 @@
    <property name="styleSheet">
     <string notr="true">background-color: rgb(85, 170, 255);</string>
    </property>
+   <widget class="QWidget" name="widget_6" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>220</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>220</width>
+      <height>40</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>220</width>
+      <height>40</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 0, 0);</string>
+    </property>
+   </widget>
+   <widget class="QScrollArea" name="scrollArea">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>40</y>
+      <width>220</width>
+      <height>285</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>220</width>
+      <height>285</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>220</width>
+      <height>16777215</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(170, 85, 255);
+background-color: rgb(0, 85, 0);</string>
+    </property>
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <widget class="QWidget" name="scrollAreaWidgetContents">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>218</width>
+       <height>283</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
   </widget>
   <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
@@ -41,9 +105,28 @@
      <height>85</height>
     </size>
    </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>85</height>
+    </size>
+   </property>
    <property name="styleSheet">
     <string notr="true">background-color: rgb(28, 43, 255);</string>
    </property>
+   <widget class="QLabel" name="groupNameLabel">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>20</y>
+      <width>54</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QWidget" name="widget_3" native="true">
    <property name="geometry">
@@ -53,6 +136,18 @@
      <width>220</width>
      <height>220</height>
     </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>220</width>
+     <height>220</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>220</width>
+     <height>220</height>
+    </size>
    </property>
    <property name="styleSheet">
     <string notr="true">background-color: rgb(255, 255, 0);</string>
@@ -90,6 +185,12 @@
     <size>
      <width>540</width>
      <height>155</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>540</width>
+     <height>16777215</height>
     </size>
    </property>
    <property name="styleSheet">

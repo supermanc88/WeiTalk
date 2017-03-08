@@ -318,7 +318,7 @@ void FriendDialog::getGroupList()
     QList<group_info_t>::iterator group;
     for(group=groupList->begin(); group!=groupList->end(); group++)
     {
-        m_groupItme->getOrCreateItem((*group).acGroupName);
+        m_groupItme->getOrCreateItem((*group).acGroupName, (*group).nGroupId);
     }
 
     joinAllRoom();
