@@ -320,6 +320,46 @@ void FriendDialog::getGroupList()
     {
         m_groupItme->getOrCreateItem((*group).acGroupName);
     }
+
+    joinAllRoom();
+}
+
+void FriendDialog::joinAllRoom()
+{
+    QXmppMucManager * manager = new QXmppMucManager;
+    m_xmppClient->addExtension(manager);
+
+    QList<group_info_t>::iterator group;
+    for(group=groupList->begin(); group!=groupList->end(); group++)
+    {
+        unsigned int groupId = (*group).nGroupId;
+        QString roomJID = QString::number(groupId,10)+"@conference.im.weitainet.com";
+
+        qDebug()<<roomJID<<"定向出席房间";
+
+        QXmppMucRoom *room = manager->addRoom(roomJID);
+        room->setNickName("客官给钱");
+        room->join();
+
+        groupRoomMap.insert(QString::number(groupId,10), room);
+    }
+
+}
+
+void FriendDialog::leaveAllRoom()
+{
+    if(!groupRoomMap.empty())
+    {
+        QMap<QString, QXmppMucRoom*>::iterator iter;
+
+        for(iter = groupRoomMap.begin(); iter != groupRoomMap.end(); iter++)
+        {
+            QXmppMucRoom * room = iter.value();
+            room->leave();
+
+            delete room;
+        }
+    }
 }
 
 /*

@@ -19,6 +19,13 @@ public:
     QString getGroupName() const;
     void setGroupName(const QString &value);
 
+signals:
+    void showGroupChatDialog(QString groupName);
+
+public slots:
+    //重写双击事件，用来打开群组聊天
+    virtual void mouseDoubleClickEvent(QMouseEvent * event);
+
 private:
     Ui::GroupItem *ui;
 

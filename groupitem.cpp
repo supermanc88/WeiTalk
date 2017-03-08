@@ -1,6 +1,7 @@
 #include "groupitem.h"
 #include "ui_groupitem.h"
 #include <QDebug>
+#include <QMouseEvent>
 
 GroupItem::GroupItem(QWidget *parent) :
     QWidget(parent),
@@ -32,4 +33,10 @@ void GroupItem::setGroupName(const QString &value)
 {
     groupName = value;
     ui->groupName->setText(groupName);
+}
+
+void GroupItem::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    QString m_groupName = getGroupName();
+    emit showGroupChatDialog(m_groupName);
 }

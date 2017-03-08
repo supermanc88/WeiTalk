@@ -9,6 +9,8 @@
 #include "imtoolitem.h"
 #include "weitalkserverapi.h"
 
+#include "QXmppMucManager.h"
+
 class FriendListArea;
 class GroupListArea;
 class GroupToolItem;
@@ -67,6 +69,15 @@ public slots:
     //获取已经加入的群组列表
     void getGroupList();
 
+/**************************************************
+ * 出席所有房间和离开所有房间
+ * 效果为群组上线和下线
+ */
+
+    void joinAllRoom();
+    void leaveAllRoom();
+/**************************************************/
+
 
 /***************************************************
  * 窗口自动隐藏功能函数
@@ -121,6 +132,9 @@ private:
     WeiTalkServerAPI WTAPI;
 
     QList<group_info_t> * groupList;
+
+
+    QMap<QString, QXmppMucRoom*> groupRoomMap;
 
 };
 
