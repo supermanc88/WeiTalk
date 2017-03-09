@@ -5,6 +5,7 @@
 #include "weitalkserverapi.h"
 
 class QVBoxLayout;
+class GroupMemberModel;
 
 namespace Ui {
 class WeChat;
@@ -28,6 +29,9 @@ public:
     QString getGroupName() const;
     void setGroupName(const QString &value);
 
+
+    QMap<QString, GroupMemberModel *> *getGroupMemberMap() const;
+
 private:
     Ui::WeChat *ui;
     int groupId;
@@ -38,6 +42,8 @@ private:
     WeiTalkServerAPI API;
 
     QList<group_member_t> * groupMemberList;
+
+    QMap<QString, GroupMemberModel*> * groupMemberMap;
 
     QVBoxLayout * g_layout;//群组成员列表布局
 

@@ -4,10 +4,16 @@
 #
 #-------------------------------------------------
 QXMPP_INCLUDEPATH = $$PWD/qxmpp/base $$PWD/qxmpp/client $$PWD/qxmpp/server
-QXMPP_LIB = $$PWD/qxmpp/LIB/libqxmpp_d0.a
+QXMPP_DEBUG_LIB = $$PWD/qxmpp/LIB/DebugLib/libqxmpp_d0.a
+QXMPP_RELEASE_LIB = $$PWD/qxmpp/LIB/ReleaseLib/libqxmpp0.a
 
 INCLUDEPATH += $$QXMPP_INCLUDEPATH
-LIBS += $$QXMPP_LIB
+
+CONFIG(debug, debug|release) {
+    LIBS += $$QXMPP_DEBUG_LIB
+} else {
+    LIBS += $$QXMPP_RELEASE_LIB
+}
 
 QT       += core gui
 

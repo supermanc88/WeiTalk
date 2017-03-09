@@ -17,6 +17,7 @@ WeChat::WeChat(int groupId, QWidget *parent) :
     g_layout->setSpacing(2);
 
     groupMemberList = new QList<group_member_t>;
+    groupMemberMap = new QMap<QString, GroupMemberModel*>;
 
     API.SelectGroupUserList(this->groupId, groupMemberList, this->memberCount);
 
@@ -36,6 +37,8 @@ void WeChat::initGroupMemberList()
         GroupMemberModel * model = new GroupMemberModel;
         QString c_nickName = (*iter).nickname;
         QString c_userName = (*iter).username;
+
+        groupMemberMap->insert(c_userName, model);
 
         //如果有昵称的话设置的是昵称，没有就设置用户名
         if(!c_nickName.isEmpty())
@@ -70,3 +73,9 @@ void WeChat::setGroupName(const QString &value)
 
     this->ui->groupNameLabel->setText(groupName);
 }
+
+QMap<QString, GroupMemberModel *> *WeChat::getGroupMemberMap() const
+{
+    return groupMemberMap;
+}
+

@@ -76,6 +76,44 @@ public slots:
 
     void joinAllRoom();
     void leaveAllRoom();
+
+    //所有房间的信号：参与者登录，参与者离开，有新的参与者加入，信息等等
+    void allRoomEvents();
+
+
+    //参与者离开
+    void participantRemoved(const QString &jid);
+
+    //参与者加入房间或者有新的参与者加入
+    void participantAdded(const QString &jid);
+/**************************************************/
+
+
+/**************************************************/
+    //功能函数
+    //从服务器端传回的房间JID中截取username
+    QString getUserNameFromJID(const QString &jid);
+
+    /**
+     * @brief changeParticpantState
+     * @param groupId
+     * @param username
+     *
+     * 根据房间号和用户名改变出席状态离席
+     */
+    void changeParticpantStateLeave(int groupId, QString username);
+
+    /**
+     * @brief changeParticpantStateAdd
+     * @param groupId
+     * @param username
+     *
+     * 根据房间号和用户名改变出席状态之出席
+     *
+     * 有原来人员加入和新人员加入两种情况
+     */
+    void changeParticpantStateAdd(int groupId, QString username);
+
 /**************************************************/
 
 

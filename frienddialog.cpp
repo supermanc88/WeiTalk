@@ -25,8 +25,13 @@
 #include "grouptoolitem.h"
 #include "grouplistarea.h"
 
+#include <QRegExp>
+#include "wechat.h"
+#include "groupmembermodel.h"
+
 
 extern QString LoginUserName;
+extern QMap<int,WeChat*> openGroupChatMap;
 
 /*
  * 目前这样可以移动整个窗口，先做个样子，后期可以把头部单独拿出来
@@ -322,6 +327,7 @@ void FriendDialog::getGroupList()
     }
 
     joinAllRoom();
+    allRoomEvents();
 }
 
 void FriendDialog::joinAllRoom()
@@ -342,6 +348,8 @@ void FriendDialog::joinAllRoom()
         room->join();
 
         groupRoomMap.insert(QString::number(groupId,10), room);
+
+        connect(room, SIGNAL(participantAdded(QString)), this, SLOT(participantAdded(QString)));
     }
 
 }
@@ -360,6 +368,102 @@ void FriendDialog::leaveAllRoom()
             delete room;
         }
     }
+}
+
+void FriendDialog::allRoomEvents()
+{
+    if(!groupRoomMap.empty())
+    {
+        QMap<QString, QXmppMucRoom*>::iterator iter;
+        for(iter = groupRoomMap.begin(); iter != groupRoomMap.end(); iter++)
+        {
+            QXmppMucRoom * room = iter.value();
+
+            connect(room, SIGNAL(participantRemoved(QString)), this, SLOT(participantRemoved(QString)));
+        }
+    }
+}
+
+void FriendDialog::participantRemoved(const QString &jid)
+{
+    QXmppMucRoom * room = qobject_cast<QXmppMucRoom *> (sender());
+    QString RoomJID = room->jid();
+    //根据JID获取房间号
+
+    QRegExp rx("(\\d+)");
+    int pos = 0;
+    int c_groupId = 0;
+    while((pos = rx.indexIn(RoomJID, pos)) != -1)
+    {
+        c_groupId = rx.cap(0).toInt();
+        pos = rx.matchedLength();
+    }
+
+    qDebug()<<"当前房间号为"<<c_groupId;
+    qDebug()<<"当前离开的jid为："<<jid;
+
+    QString username = getUserNameFromJID(jid);  //离开房间的username
+
+    changeParticpantStateLeave(c_groupId, username);
+}
+
+void FriendDialog::participantAdded(const QString &jid)
+{
+    QXmppMucRoom * room = qobject_cast<QXmppMucRoom *> (sender());
+    QString RoomJID = room->jid();
+    //根据JID获取房间号
+
+    QRegExp rx("(\\d+)");
+    int pos = 0;
+    int c_groupId = 0;
+    while((pos = rx.indexIn(RoomJID, pos)) != -1)
+    {
+        c_groupId = rx.cap(0).toInt();
+        pos = rx.matchedLength();
+    }
+
+    qDebug()<<"当前房间号为"<<c_groupId;
+    qDebug()<<"当前加入的jid为："<<jid;
+
+    QString username = getUserNameFromJID(jid);  //加入房间的username
+
+    changeParticpantStateAdd(c_groupId, username);
+}
+
+QString FriendDialog::getUserNameFromJID(const QString &jid)
+{
+    QString username = jid.section("/",1,1);
+    return username;
+}
+
+void FriendDialog::changeParticpantStateLeave(int groupId, QString username)
+{
+    if(openGroupChatMap.contains(groupId))
+    {
+        WeChat * weChat = openGroupChatMap[groupId];
+
+        QMap<QString, GroupMemberModel *> * groupMemberMap = weChat->getGroupMemberMap();
+
+        GroupMemberModel * model = groupMemberMap->value(username);
+
+        model->setNickName("lixian");
+    }
+
+}
+
+void FriendDialog::changeParticpantStateAdd(int groupId, QString username)
+{
+    if(openGroupChatMap.contains(groupId))
+    {
+        WeChat * weChat = openGroupChatMap[groupId];
+
+        QMap<QString, GroupMemberModel *> * groupMemberMap = weChat->getGroupMemberMap();
+
+        GroupMemberModel * model = groupMemberMap->value(username);
+
+        model->setNickName(username);
+    }
+
 }
 
 /*

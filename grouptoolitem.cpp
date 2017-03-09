@@ -4,6 +4,8 @@
 #include "listbutton.h"
 #include "wechat.h"
 
+QMap<int, WeChat*> openGroupChatMap;
+
 GroupToolItem::GroupToolItem(const QString& string, QWidget *parent) : QWidget(parent)
 {
     m_btn = new ListButton(string);
@@ -66,11 +68,23 @@ void GroupToolItem::listShowOrHide()
 
 void GroupToolItem::showGroupChatDialog(QString groupName, int groupId)
 {
-    WeChat * weChat = new WeChat(groupId);
 
-    weChat->setGroupName(groupName);
-    weChat->initGroupMemberList();
+    //如果打开列表里存在此dialog，从打开的寻找
+    //否则创建并显示
+    if(openGroupChatMap.contains(groupId))
+    {
+        openGroupChatMap[groupId]->show();
+    }
+    else
+    {
+        WeChat * weChat = new WeChat(groupId);
 
-    weChat->show();
+        weChat->setGroupName(groupName);
+        weChat->initGroupMemberList();
+
+        weChat->show();
+
+        openGroupChatMap[groupId] = weChat;
+    }
 
 }
