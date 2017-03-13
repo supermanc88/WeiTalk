@@ -7,6 +7,7 @@
 //#include "frienddialog.h"
 
 #include "QXmppRosterManager.h"
+#include "QXmppConfiguration.h"
 #include <QApplication>
 #include <QDesktopWidget>
 

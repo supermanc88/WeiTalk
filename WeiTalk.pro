@@ -3,17 +3,21 @@
 # Project created by QtCreator 2017-02-15T17:45:08
 #
 #-------------------------------------------------
+
 QXMPP_INCLUDEPATH = $$PWD/qxmpp/base $$PWD/qxmpp/client $$PWD/qxmpp/server
-QXMPP_DEBUG_LIB = $$PWD/qxmpp/LIB/DebugLib/libqxmpp_d0.a
-QXMPP_RELEASE_LIB = $$PWD/qxmpp/LIB/ReleaseLib/libqxmpp0.a
+QXMPP_DEBUG_LIB = $$PWD/qxmpp/LIB/DebugLib
+QXMPP_RELEASE_LIB = $$PWD/qxmpp/LIB/ReleaseLib
 
 INCLUDEPATH += $$QXMPP_INCLUDEPATH
 
 CONFIG(debug, debug|release) {
-    LIBS += $$QXMPP_DEBUG_LIB
+    LIBS += -L$$QXMPP_DEBUG_LIB -lqxmpp_d
+    DESTDIR += $$PWD/qxmpp/LIB/DebugLib/
 } else {
-    LIBS += $$QXMPP_RELEASE_LIB
+    LIBS += -L$$QXMPP_RELEASE_LIB -lqxmpp
+    DESTDIR += $$PWD/qxmpp/LIB/ReleaseLib/
 }
+
 
 QT       += core gui
 
@@ -83,5 +87,8 @@ FORMS += \
 RESOURCES += \
     faces.qrc \
     images.qrc
+
+DISTFILES += \
+    qxmpp.pri
 
 
