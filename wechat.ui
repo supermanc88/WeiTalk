@@ -196,6 +196,29 @@ background-color: rgb(0, 85, 0);</string>
    <property name="styleSheet">
     <string notr="true">background-color: rgb(170, 0, 255);</string>
    </property>
+   <widget class="QLineEdit" name="lineEdit">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>50</y>
+      <width>511</width>
+      <height>71</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="sendMessageBtn">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>130</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Entry</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

@@ -4,6 +4,11 @@
 #include <QVBoxLayout>
 #include <groupmembermodel.h>
 
+#include <QDebug>
+
+
+extern QXmppClient * globalClient;
+
 WeChat::WeChat(int groupId, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::WeChat)
@@ -19,7 +24,14 @@ WeChat::WeChat(int groupId, QWidget *parent) :
     groupMemberList = new QList<group_member_t>;
     groupMemberMap = new QMap<QString, GroupMemberModel*>;
 
+    client = globalClient;
+
     API.SelectGroupUserList(this->groupId, groupMemberList, this->memberCount);
+
+    qDebug()<<this->groupId;
+
+    //connect sendmessagebtn to funtion sendmessage
+    connect(this->ui->sendMessageBtn, SIGNAL(clicked(bool)), this, SLOT(sendMessage()));
 
 }
 
@@ -77,5 +89,26 @@ void WeChat::setGroupName(const QString &value)
 QMap<QString, GroupMemberModel *> *WeChat::getGroupMemberMap() const
 {
     return groupMemberMap;
+}
+
+QString WeChat::getGroupJID()
+{
+    QString strGid = QString("%1").arg(this->groupId);
+
+    QString groupJID = strGid + "@conference.im.weitainet.com";
+
+    qDebug()<<"room jid:"<<groupJID;
+    return groupJID;
+}
+
+void WeChat::sendMessage()
+{
+    QString sendText = this->ui->lineEdit->text();
+
+    QString groupJID = getGroupJID();
+
+    client->sendMessage(groupJID, sendText);
+
+    this->ui->lineEdit->setText("");
 }
 

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "weitalkserverapi.h"
+#include "QXmppClient.h"
 
 class QVBoxLayout;
 class GroupMemberModel;
@@ -32,6 +33,14 @@ public:
 
     QMap<QString, GroupMemberModel *> *getGroupMemberMap() const;
 
+
+    //groupid  to groupJID
+    QString getGroupJID();
+
+public slots:
+    //sendmessage to a room
+    void sendMessage();
+
 private:
     Ui::WeChat *ui;
     int groupId;
@@ -46,6 +55,8 @@ private:
     QMap<QString, GroupMemberModel*> * groupMemberMap;
 
     QVBoxLayout * g_layout;//群组成员列表布局
+
+    QXmppClient * client;
 
 };
 

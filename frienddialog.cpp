@@ -356,7 +356,9 @@ void FriendDialog::joinAllRoom()
 
         QXmppMucRoom *room = manager->addRoom(roomJID);
         room->setNickName("客官给钱");
-        room->join();
+        bool isJoin = room->join();
+
+        Q_ASSERT(isJoin);
 
         groupRoomMap.insert(QString::number(groupId,10), room);
 
@@ -391,6 +393,8 @@ void FriendDialog::allRoomEvents()
             QXmppMucRoom * room = iter.value();
 
             connect(room, SIGNAL(participantRemoved(QString)), this, SLOT(participantRemoved(QString)));
+
+            connect(room, SIGNAL(messageReceived(QXmppMessage)), this, SLOT(messageReceived(QXmppMessage)));
         }
     }
 }
@@ -614,7 +618,8 @@ void FriendDialog::showTemporaryChatList()
 
 void FriendDialog::messageReceived(const QXmppMessage &message)
 {
-    //
+    //this is a simple message receive example.
+    //there are many conditions to judge.
     qDebug()<<message.body();
 }
 
