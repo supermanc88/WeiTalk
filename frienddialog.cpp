@@ -28,10 +28,13 @@
 #include <QRegExp>
 #include "wechat.h"
 #include "groupmembermodel.h"
+#include "QXmppMessage.h"
 
 
 extern QString LoginUserName;
 extern QMap<int,WeChat*> openGroupChatMap;
+
+QXmppClient * globalClient;
 
 /*
  * 目前这样可以移动整个窗口，先做个样子，后期可以把头部单独拿出来
@@ -137,6 +140,8 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
     connect(this->myLabel_5, SIGNAL(clicked()), this, SLOT(showTemporaryChatList()));
 
     /**********************************************/
+
+    connect(this->m_xmppClient, SIGNAL(messageReceived(QXmppMessage)), this, SLOT(messageReceived(QXmppMessage)));
 }
 
 void FriendDialog::mousePressEvent(QMouseEvent *event)
@@ -183,6 +188,12 @@ void FriendDialog::runApp()
     m_loginDialog = new LoginDialog(this->m_xmppClient);
     m_loginDialog->show();
     connect(this->m_loginDialog, SIGNAL(loginSucess()), this, SLOT(show()));
+    connect(this->m_loginDialog, SIGNAL(loginSucess()), this, SLOT(InitGlobalClient()));
+}
+
+void FriendDialog::InitGlobalClient()
+{
+    globalClient = this->m_xmppClient;
 }
 
 void FriendDialog::rosterReceived()
@@ -599,5 +610,11 @@ void FriendDialog::showTemporaryChatList()
     this->myLabel_3->setStyleSheet(QStringLiteral("image: url(:/images/icon_contacts_normal.png);"));
     this->myLabel_4->setStyleSheet(QStringLiteral("image: url(:/images/icon_group_normal.png);"));
     this->myLabel_5->setStyleSheet(QStringLiteral("image: url(:/images/icon_last_selected.png);"));
+}
+
+void FriendDialog::messageReceived(const QXmppMessage &message)
+{
+    //
+    qDebug()<<message.body();
 }
 

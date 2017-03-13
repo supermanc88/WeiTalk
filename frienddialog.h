@@ -14,6 +14,7 @@
 class FriendListArea;
 class GroupListArea;
 class GroupToolItem;
+//class QXmppMessage;
 
 
 namespace Ui {
@@ -48,6 +49,8 @@ public slots:
     void CloseApp();
 
     void runApp();
+
+    void InitGlobalClient();
 
     void rosterReceived();
 
@@ -144,6 +147,13 @@ public slots:
 
     //临时聊天列表
     void showTemporaryChatList();
+
+/*****************************************************
+ * message receive test*/
+
+    void messageReceived(const QXmppMessage &message);
+
+/****************************************************/
 
 private:
     bool m_moving;

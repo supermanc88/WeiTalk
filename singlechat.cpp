@@ -1,5 +1,6 @@
 #include "singlechat.h"
 #include "ui_singlechat.h"
+#include "QXmppMessage.h"
 
 SingleChat::SingleChat(const QString& bareJid, QWidget *parent) :
     QWidget(parent),
@@ -12,17 +13,17 @@ SingleChat::SingleChat(const QString& bareJid, QWidget *parent) :
     setAttribute(Qt::WA_QuitOnClose, false);
 
     setWindowFlags(Qt::FramelessWindowHint);
-//    ui->slideNavigation->setFixed(true);
-//    ui->slideNavigation->setOrientation(Qt::Vertical);
-//    ui->slideNavigation->addItem("111111");
-//    ui->slideNavigation->addItem("222222");
-//    ui->slideNavigation->addItem("333333");
-//    ui->slideNavigation->addItem("444444");
-//    ui->slideNavigation->addItem("555555");
 
     connect(ui->myLabel, SIGNAL(clicked()), this, SLOT(ShowMinimize()));
     connect(ui->myLabel_2, SIGNAL(clicked()), this, SLOT(CloseCurrentWindow()));
-//    connect(ui->myLabel_2, SIGNAL(clicked()), this, SIGNAL(closeSingleChat()));
+
+    //connect btn to send message
+    connect(ui->sendMessageBtn, SIGNAL(clicked(bool)), this, SLOT(SendMessage()));
+
+
+    //connect client to receive some message
+//    connect(this->client, SIGNAL(messageReceived(QXmppMessage)), this, SLOT(messageReceived(QXmppMessage)));
+
 }
 
 SingleChat::~SingleChat()
@@ -39,4 +40,28 @@ void SingleChat::CloseCurrentWindow()
 {
     emit closeSingleChat(this->bareJid);
     this->close();
+}
+
+void SingleChat::SendMessage()
+{
+    QString sendString = this->ui->textArea->text();
+    client->sendMessage(this->bareJid,sendString);
+    this->ui->textArea->setText("");
+}
+
+void SingleChat::messageReceived(const QXmppMessage &message)
+{
+    qDebug()<<message.body();
+}
+
+QString SingleChat::getContentOfSend() const
+{
+//    contentOfSend = this->ui->sendTextArea->
+//    this->contentOfSend = ui->textArea->text();
+    return contentOfSend;
+}
+
+void SingleChat::setClient(QXmppClient *value)
+{
+    client = value;
 }

@@ -88,7 +88,6 @@ RESOURCES += \
     faces.qrc \
     images.qrc
 
-DISTFILES += \
-    qxmpp.pri
+DISTFILES +=
 
 

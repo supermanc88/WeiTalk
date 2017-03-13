@@ -174,6 +174,29 @@ QLabel:hover{
    <property name="styleSheet">
     <string notr="true">background-color: rgb(85, 170, 0);</string>
    </property>
+   <widget class="QPushButton" name="sendMessageBtn">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>120</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Enter</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="textArea">
+    <property name="geometry">
+     <rect>
+      <x>2</x>
+      <y>4</y>
+      <width>531</width>
+      <height>101</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QWidget" name="widget_3" native="true">
    <property name="geometry">
@@ -193,6 +216,16 @@ QLabel:hover{
    <property name="styleSheet">
     <string notr="true">background-color: rgb(170, 85, 255);</string>
    </property>
+   <widget class="QTextBrowser" name="chatArea">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>541</width>
+      <height>391</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
  </widget>
  <customwidgets>

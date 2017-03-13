@@ -4,9 +4,11 @@
 #include <QMouseEvent>
 #include "listbutton.h"
 #include <QDebug>
-
+#include "QXmppClient.h"
 #include <QXmppPresence.h>
 #include "singlechat.h"
+
+extern QXmppClient * globalClient;
 
 IMToolItem::IMToolItem(const QString &title, QWidget *parent) : QWidget(parent)
 {
@@ -109,6 +111,7 @@ void IMToolItem::showItemChatDialog(const QString &bareJid)
     {
         SingleChat * singleChat = new SingleChat(bareJid);
         m_singleChatMap[bareJid] = singleChat;
+        singleChat->setClient(globalClient);
 
         connect(singleChat, SIGNAL(closeSingleChat(QString)), this, SLOT(removeItemFromChatMap(QString)));
 
