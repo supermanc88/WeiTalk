@@ -1,0 +1,13 @@
+prefix=F:/Qt/Qt5.8.0/5.8/mingw53_32
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include/qxmpp
+
+
+Name: Qxmpp_d
+Description: Qxmpp_d Library
+Version: 0.9.3
+Libs: -L${libdir} -lqxmpp_d0 
+Libs.private: -ldnsapi -lws2_32 -LF:/Qt/Qt5.8.0/5.8/mingw53_32/lib F:/Qt/Qt5.8.0/5.8/mingw53_32/lib/libQt5Networkd.a F:/Qt/Qt5.8.0/5.8/mingw53_32/lib/libQt5Xmld.a F:/Qt/Qt5.8.0/5.8/mingw53_32/lib/libQt5Cored.a debug/qxmpp_d_resource_res.o   
+Cflags: -DQXMPP_SHARED -I${includedir}
+

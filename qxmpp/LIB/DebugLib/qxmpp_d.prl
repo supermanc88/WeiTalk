@@ -1,0 +1,5 @@
+QMAKE_PRL_BUILD_DIR = C:/Users/chengheming/Documents/QTProject/WeiTalk_capture/WeiTalk/build-src-Desktop_Qt_5_8_0_MinGW_32bit-Release
+QMAKE_PRO_INPUT = src.pro
+QMAKE_PRL_TARGET = libqxmpp_d0.a
+QMAKE_PRL_CONFIG = lex yacc debug exceptions depend_includepath testcase_targets import_plugins import_qpa_plugin incremental_off windows file_copies qmake_use qt warn_on link_prl debug_and_release debug_and_release_target precompile_header shared c++11 no_plugin_manifest rtti win32 mingw gcc debug DebugBuild Debug build_pass shared create_pc create_prl no_install_prl debug DebugBuild Debug build_pass have_target dll no_plist exclusive_builds debug_info no_autoqmake thread moc resources
+QMAKE_PRL_VERSION = 0
