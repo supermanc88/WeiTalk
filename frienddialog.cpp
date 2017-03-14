@@ -167,6 +167,11 @@ void FriendDialog::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
+FriendDialog::~FriendDialog()
+{
+    leaveAllRoom();
+}
+
 void FriendDialog::ShowMinimize()
 {
     this->showMinimized();
@@ -337,8 +342,10 @@ void FriendDialog::getGroupList()
         m_groupItme->getOrCreateItem((*group).acGroupName, (*group).nGroupId);
     }
 
+//    allRoomEvents();
     joinAllRoom();
-    allRoomEvents();
+
+
 }
 
 void FriendDialog::joinAllRoom()
@@ -355,14 +362,22 @@ void FriendDialog::joinAllRoom()
         qDebug()<<roomJID<<"定向出席房间";
 
         QXmppMucRoom *room = manager->addRoom(roomJID);
-        room->setNickName("客官给钱");
-        bool isJoin = room->join();
 
-        Q_ASSERT(isJoin);
+        connect(room, SIGNAL(participantAdded(QString)), this, SLOT(participantAdded(QString)));
+
+        connect(room, SIGNAL(participantRemoved(QString)), this, SLOT(participantRemoved(QString)));
+
+        connect(room, SIGNAL(messageReceived(QXmppMessage)), this, SLOT(messageReceived(QXmppMessage)));
 
         groupRoomMap.insert(QString::number(groupId,10), room);
 
-        connect(room, SIGNAL(participantAdded(QString)), this, SLOT(participantAdded(QString)));
+        room->setNickName("客官给钱");
+
+        bool isJoin = room->join();
+
+//        Q_ASSERT(isJoin);
+
+
     }
 
 }
@@ -376,13 +391,17 @@ void FriendDialog::leaveAllRoom()
         for(iter = groupRoomMap.begin(); iter != groupRoomMap.end(); iter++)
         {
             QXmppMucRoom * room = iter.value();
-            room->leave();
+            bool isLeave = room->leave();
+
+            Q_ASSERT(isLeave);
 
             delete room;
         }
     }
 }
 
+
+//before join room , all setting must be setup yet.
 void FriendDialog::allRoomEvents()
 {
     if(!groupRoomMap.empty())
@@ -395,6 +414,8 @@ void FriendDialog::allRoomEvents()
             connect(room, SIGNAL(participantRemoved(QString)), this, SLOT(participantRemoved(QString)));
 
             connect(room, SIGNAL(messageReceived(QXmppMessage)), this, SLOT(messageReceived(QXmppMessage)));
+
+            connect(room, SIGNAL(participantAdded(QString)), this, SLOT(participantAdded(QString)));
         }
     }
 }

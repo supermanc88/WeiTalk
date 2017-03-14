@@ -24,6 +24,7 @@ public:
     explicit FriendItem(QWidget *parent = 0);
     //有昵称的构造函数
     explicit FriendItem(const QString nickName, QWidget *parent = 0);
+
     ~FriendItem();
 
     //更新好友在线状态
