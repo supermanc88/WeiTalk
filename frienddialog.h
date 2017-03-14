@@ -155,6 +155,8 @@ public slots:
 
     void messageReceived(const QXmppMessage &message);
 
+    void messageGroupReceived(const QXmppMessage &message);
+
 /****************************************************/
 
 private:

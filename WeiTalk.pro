@@ -12,14 +12,16 @@ INCLUDEPATH += $$QXMPP_INCLUDEPATH
 
 CONFIG(debug, debug|release) {
     win32{
-        LIBS += $$QXMPP_DEBUG_LIB/libqxmpp_d0.a
+        LIBS += $$QXMPP_DEBUG_LIB/qxmpp_d0.lib
+#        LIBS += $$QXMPP_DEBUG_LIB/libqxmpp_d0.a
     }else{
         LIBS += -L$$QXMPP_DEBUG_LIB -lqxmpp_d
     }
     DESTDIR += $$PWD/qxmpp/LIB/DebugLib/
 } else {
     win32{
-        LIBS += -L$$QXMPP_RELEASE_LIB/libqxmpp0.a
+        LIBS += -L$$QXMPP_RELEASE_LIB/qxmpp0.lib
+#        LIBS += -L$$QXMPP_RELEASE_LIB/libqxmpp0.a
     }else{
         LIBS += -L$$QXMPP_RELEASE_LIB -lqxmpp
     }

@@ -247,11 +247,11 @@ void FriendDialog::presenceReceived(const QXmppPresence &presence)
             subscribed.setType(QXmppPresence::Subscribed);
             m_xmppClient->sendPacket(subscribed);
 
-//            // reciprocal subscription
-//            QXmppPresence subscribe;
-//            subscribe.setTo(reqFrom);
-//            subscribe.setType(QXmppPresence::Subscribe);
-//            m_xmppClient->sendPacket(subscribe);
+            // reciprocal subscription
+            QXmppPresence subscribe;
+            subscribe.setTo(reqFrom);
+            subscribe.setType(QXmppPresence::Subscribe);
+            m_xmppClient->sendPacket(subscribe);
         }
         else if(retButton == QMessageBox::No)
         {
@@ -367,7 +367,7 @@ void FriendDialog::joinAllRoom()
 
         connect(room, SIGNAL(participantRemoved(QString)), this, SLOT(participantRemoved(QString)));
 
-        connect(room, SIGNAL(messageReceived(QXmppMessage)), this, SLOT(messageReceived(QXmppMessage)));
+        connect(room, SIGNAL(messageReceived(QXmppMessage)), this, SLOT(messageGroupReceived(QXmppMessage)));
 
         groupRoomMap.insert(QString::number(groupId,10), room);
 
@@ -375,7 +375,7 @@ void FriendDialog::joinAllRoom()
 
         bool isJoin = room->join();
 
-//        Q_ASSERT(isJoin);
+        Q_ASSERT(isJoin);
 
 
     }
@@ -413,7 +413,7 @@ void FriendDialog::allRoomEvents()
 
             connect(room, SIGNAL(participantRemoved(QString)), this, SLOT(participantRemoved(QString)));
 
-            connect(room, SIGNAL(messageReceived(QXmppMessage)), this, SLOT(messageReceived(QXmppMessage)));
+            connect(room, SIGNAL(messageReceived(QXmppMessage)), this, SLOT(messageGroupReceived(QXmppMessage)));
 
             connect(room, SIGNAL(participantAdded(QString)), this, SLOT(participantAdded(QString)));
         }
@@ -641,6 +641,11 @@ void FriendDialog::messageReceived(const QXmppMessage &message)
 {
     //this is a simple message receive example.
     //there are many conditions to judge.
-    qDebug()<<message.body();
+    qDebug()<<"this is single chat:"<<message.body();
+}
+
+void FriendDialog::messageGroupReceived(const QXmppMessage &message)
+{
+    qDebug()<<"this is group chat:"<<message.body();
 }
 
