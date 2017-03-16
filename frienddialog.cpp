@@ -30,6 +30,11 @@
 #include "groupmembermodel.h"
 #include "QXmppMessage.h"
 
+#include "QXmppDataForm.h"
+
+#include <QFile>
+#include <QXmlStreamWriter>
+
 
 extern QString LoginUserName;
 extern QMap<int,WeChat*> openGroupChatMap;
@@ -362,6 +367,15 @@ void FriendDialog::joinAllRoom()
         qDebug()<<roomJID<<"定向出席房间";
 
         QXmppMucRoom *room = manager->addRoom(roomJID);
+        groupRoomMap.insert(QString::number(groupId,10), room);
+        room->setNickName(LoginUserName);
+
+        room->join();
+
+        //request the room config and will receive a signal
+        room->requestConfiguration();
+
+        connect(room, SIGNAL(configurationReceived(QXmppDataForm)), this, SLOT(configurationReceived(QXmppDataForm)));
 
         connect(room, SIGNAL(participantAdded(QString)), this, SLOT(participantAdded(QString)));
 
@@ -369,13 +383,10 @@ void FriendDialog::joinAllRoom()
 
         connect(room, SIGNAL(messageReceived(QXmppMessage)), this, SLOT(messageGroupReceived(QXmppMessage)));
 
-        groupRoomMap.insert(QString::number(groupId,10), room);
 
-        room->setNickName("客官给钱");
+//        bool isJoin = room->join();
 
-        bool isJoin = room->join();
-
-        Q_ASSERT(isJoin);
+//        Q_ASSERT(isJoin);
 
 
     }
@@ -402,6 +413,7 @@ void FriendDialog::leaveAllRoom()
 
 
 //before join room , all setting must be setup yet.
+//not used
 void FriendDialog::allRoomEvents()
 {
     if(!groupRoomMap.empty())
@@ -635,6 +647,32 @@ void FriendDialog::showTemporaryChatList()
     this->myLabel_3->setStyleSheet(QStringLiteral("image: url(:/images/icon_contacts_normal.png);"));
     this->myLabel_4->setStyleSheet(QStringLiteral("image: url(:/images/icon_group_normal.png);"));
     this->myLabel_5->setStyleSheet(QStringLiteral("image: url(:/images/icon_last_selected.png);"));
+}
+
+void FriendDialog::configurationReceived(const QXmppDataForm &configuration)
+{
+    qDebug()<<"receive the room configuration and set the config";
+    QXmppMucRoom * room = qobject_cast<QXmppMucRoom *> (sender());
+//    room->setConfiguration(configuration);
+
+//    room->join();
+    QString * str = new QString;
+    QXmlStreamWriter writer(str);
+
+    configuration.toXml(&writer);
+
+    qWarning()<<*str;
+
+    QXmppDataForm *configure = new QXmppDataForm;
+    configure->setType(QXmppDataForm::Submit);
+
+    room->setConfiguration(*configure);
+
+    bool isjoin = room->isJoined();
+    Q_ASSERT(isjoin);
+    //print the configuration
+
+
 }
 
 void FriendDialog::messageReceived(const QXmppMessage &message)
