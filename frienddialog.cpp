@@ -30,6 +30,11 @@
 #include "groupmembermodel.h"
 #include "QXmppMessage.h"
 
+#include "QXmppDataForm.h"
+
+#include <QFile>
+#include <QXmlStreamWriter>
+
 
 extern QString LoginUserName;
 extern QMap<int,WeChat*> openGroupChatMap;
@@ -247,11 +252,11 @@ void FriendDialog::presenceReceived(const QXmppPresence &presence)
             subscribed.setType(QXmppPresence::Subscribed);
             m_xmppClient->sendPacket(subscribed);
 
-//            // reciprocal subscription
-//            QXmppPresence subscribe;
-//            subscribe.setTo(reqFrom);
-//            subscribe.setType(QXmppPresence::Subscribe);
-//            m_xmppClient->sendPacket(subscribe);
+            // reciprocal subscription
+            QXmppPresence subscribe;
+            subscribe.setTo(reqFrom);
+            subscribe.setType(QXmppPresence::Subscribe);
+            m_xmppClient->sendPacket(subscribe);
         }
         else if(retButton == QMessageBox::No)
         {
@@ -362,18 +367,24 @@ void FriendDialog::joinAllRoom()
         qDebug()<<roomJID<<"定向出席房间";
 
         QXmppMucRoom *room = manager->addRoom(roomJID);
+        groupRoomMap.insert(QString::number(groupId,10), room);
+        room->setNickName(LoginUserName);
+
+        room->join();
+
+        //request the room config and will receive a signal
+        room->requestConfiguration();
+
+        connect(room, SIGNAL(configurationReceived(QXmppDataForm)), this, SLOT(configurationReceived(QXmppDataForm)));
 
         connect(room, SIGNAL(participantAdded(QString)), this, SLOT(participantAdded(QString)));
 
         connect(room, SIGNAL(participantRemoved(QString)), this, SLOT(participantRemoved(QString)));
 
-        connect(room, SIGNAL(messageReceived(QXmppMessage)), this, SLOT(messageReceived(QXmppMessage)));
+        connect(room, SIGNAL(messageReceived(QXmppMessage)), this, SLOT(messageGroupReceived(QXmppMessage)));
 
-        groupRoomMap.insert(QString::number(groupId,10), room);
 
-        room->setNickName("客官给钱");
-
-        bool isJoin = room->join();
+//        bool isJoin = room->join();
 
 //        Q_ASSERT(isJoin);
 
@@ -402,6 +413,7 @@ void FriendDialog::leaveAllRoom()
 
 
 //before join room , all setting must be setup yet.
+//not used
 void FriendDialog::allRoomEvents()
 {
     if(!groupRoomMap.empty())
@@ -413,7 +425,7 @@ void FriendDialog::allRoomEvents()
 
             connect(room, SIGNAL(participantRemoved(QString)), this, SLOT(participantRemoved(QString)));
 
-            connect(room, SIGNAL(messageReceived(QXmppMessage)), this, SLOT(messageReceived(QXmppMessage)));
+            connect(room, SIGNAL(messageReceived(QXmppMessage)), this, SLOT(messageGroupReceived(QXmppMessage)));
 
             connect(room, SIGNAL(participantAdded(QString)), this, SLOT(participantAdded(QString)));
         }
@@ -637,10 +649,41 @@ void FriendDialog::showTemporaryChatList()
     this->myLabel_5->setStyleSheet(QStringLiteral("image: url(:/images/icon_last_selected.png);"));
 }
 
+void FriendDialog::configurationReceived(const QXmppDataForm &configuration)
+{
+    qDebug()<<"receive the room configuration and set the config";
+    QXmppMucRoom * room = qobject_cast<QXmppMucRoom *> (sender());
+//    room->setConfiguration(configuration);
+
+//    room->join();
+    QString * str = new QString;
+    QXmlStreamWriter writer(str);
+
+    configuration.toXml(&writer);
+
+    qWarning()<<*str;
+
+    QXmppDataForm *configure = new QXmppDataForm;
+    configure->setType(QXmppDataForm::Submit);
+
+    room->setConfiguration(*configure);
+
+    bool isjoin = room->isJoined();
+    Q_ASSERT(isjoin);
+    //print the configuration
+
+
+}
+
 void FriendDialog::messageReceived(const QXmppMessage &message)
 {
     //this is a simple message receive example.
     //there are many conditions to judge.
-    qDebug()<<message.body();
+    qDebug()<<"this is single chat:"<<message.body();
+}
+
+void FriendDialog::messageGroupReceived(const QXmppMessage &message)
+{
+    qDebug()<<"this is group chat:"<<message.body();
 }
 

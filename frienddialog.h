@@ -153,7 +153,12 @@ public slots:
 /*****************************************************
  * message receive test*/
 
+    //get the room config
+    void configurationReceived(const QXmppDataForm &configuration);
+
     void messageReceived(const QXmppMessage &message);
+
+    void messageGroupReceived(const QXmppMessage &message);
 
 /****************************************************/
 
