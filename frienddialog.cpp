@@ -214,7 +214,14 @@ void FriendDialog::rosterReceived()
             name = "-";
         qDebug("example_2_rosterHandling:: Roster received: %s [%s]", bareJid.toStdString().c_str(), qPrintable(name));
 
-        m_item1->getOrCreateItem(bareJid);
+        //如果barejid中包含群组类型JID，则过滤掉
+        if(!bareJid.contains("conference.im.weitainet.com"), Qt::CaseSensitive)
+        {
+            qDebug()<<"current add is :  "<<bareJid;
+            m_item1->getOrCreateItem(bareJid);
+//            continue;
+        }
+
     }
 
 }

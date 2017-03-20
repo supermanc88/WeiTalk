@@ -91,7 +91,12 @@ FriendItem *IMToolItem::getRosterItemFromBareJid(const QString &bareJid)
 
 void IMToolItem::updatePresence(const QString &bareJid, const QMap<QString, QXmppPresence> &presences)
 {
-    FriendItem *item = getOrCreateItem(bareJid);
+    FriendItem *item;
+    if(!bareJid.contains("conference.im.weitainet.com"), Qt::CaseSensitive)
+    {
+        item = getOrCreateItem(bareJid);
+    }
+
     if (!presences.isEmpty())
         item->setPresence(*presences.begin());
     else
