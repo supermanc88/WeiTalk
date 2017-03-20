@@ -41,6 +41,8 @@ public slots:
     //sendmessage to a room
     void sendMessage();
 
+    void setChatContent(QString message);
+
 private:
     Ui::WeChat *ui;
     int groupId;

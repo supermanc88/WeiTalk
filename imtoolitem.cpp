@@ -108,6 +108,7 @@ void IMToolItem::updatePresence(const QString &bareJid, const QMap<QString, QXmp
 
 void IMToolItem::showItemChatDialog(const QString &bareJid)
 {
+    qDebug()<<"the single chat barejid is: "<<bareJid;
     if(openSingleChatMap.contains(bareJid))
     {
         SingleChat * singleChat = openSingleChatMap[bareJid];

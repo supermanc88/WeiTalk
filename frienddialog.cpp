@@ -691,21 +691,51 @@ void FriendDialog::messageReceived(const QXmppMessage &message)
     qDebug()<<"this is single chat:"<<message.body();
 
     QString messageBody = message.body();
-    QString messageFromJID = message.from();
+    QString messageFrom = message.from();
+
+    QString bareJID = messageFrom.section("/", 0, 0);
+
+    qDebug()<<"the seciton jid is:"<<bareJID;
 
     //说明此对话窗口已经被打开
-    if(openSingleChatMap.contains(messageFromJID))
+    if(openSingleChatMap.contains(bareJID))
     {
-        SingleChat * singleChat = openSingleChatMap[messageFromJID];
-        singleChat->setChatContent(messageFromJID+":");
-        singleChat->setChatContent(messageBody);
+        SingleChat * singleChat = openSingleChatMap[bareJID];
+        singleChat->setChatContent(bareJID + ":" + "\n");
+        singleChat->setChatContent("  " + messageBody + "\n");
     }
     //如果没有打开的话，就会用checkmsg显示
 
 }
 
 void FriendDialog::messageGroupReceived(const QXmppMessage &message)
-{
+{   
     qDebug()<<"this is group chat:"<<message.body();
+
+    QString messageBody = message.body();
+    QString messageFrom = message.from();
+
+    //还得添加一层过滤，如果群内消息是自己发送的，不显示
+    if(messageFrom.contains(LoginUserName, Qt::CaseSensitive))
+    {
+        return ;
+    }
+
+    qDebug()<<"the group chat jid is: "<<messageFrom;
+
+    QString groupIdstr = messageFrom.section("@", 0, 0);
+    int groupid = groupIdstr.toInt();
+
+    //说明此对话窗口已经被打开
+    if(openGroupChatMap.contains(groupid))
+    {
+        WeChat * weChat = openGroupChatMap[groupid];
+
+        weChat->setChatContent(messageFrom + ": " + "\n");
+        weChat->setChatContent("    " + messageBody + "\n");
+
+    }
+    //如果没有打开的话，就会用checkmsg显示
+
 }
 

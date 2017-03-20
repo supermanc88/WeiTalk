@@ -8,6 +8,7 @@
 
 
 extern QXmppClient * globalClient;
+extern QString LoginUserName;
 
 WeChat::WeChat(int groupId, QWidget *parent) :
     QWidget(parent),
@@ -110,5 +111,14 @@ void WeChat::sendMessage()
     client->sendMessage(groupJID, sendText);
 
     this->ui->lineEdit->setText("");
+
+    this->ui->textBrowser->insertPlainText(LoginUserName + ": " + "\n");
+    this->ui->textBrowser->insertPlainText("    " + sendText + "\n");
+
+}
+
+void WeChat::setChatContent(QString message)
+{
+    this->ui->textBrowser->insertPlainText(message);
 }
 

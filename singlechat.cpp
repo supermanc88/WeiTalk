@@ -47,6 +47,9 @@ void SingleChat::SendMessage()
     QString sendString = this->ui->textArea->text();
     client->sendMessage(this->bareJid,sendString);
     this->ui->textArea->setText("");
+
+    ui->textBrowser->insertPlainText(this->bareJid + ": " + "\n");
+    ui->textBrowser->insertPlainText("  " + sendString + "\n");
 }
 
 void SingleChat::messageReceived(const QXmppMessage &message)
