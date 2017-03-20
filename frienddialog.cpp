@@ -34,10 +34,12 @@
 
 #include <QFile>
 #include <QXmlStreamWriter>
+#include "singlechat.h"
 
 
 extern QString LoginUserName;
 extern QMap<int,WeChat*> openGroupChatMap;
+extern QMap<QString, SingleChat *> openSingleChatMap;
 
 QXmppClient * globalClient;
 
@@ -687,6 +689,19 @@ void FriendDialog::messageReceived(const QXmppMessage &message)
     //this is a simple message receive example.
     //there are many conditions to judge.
     qDebug()<<"this is single chat:"<<message.body();
+
+    QString messageBody = message.body();
+    QString messageFromJID = message.from();
+
+    //说明此对话窗口已经被打开
+    if(openSingleChatMap.contains(messageFromJID))
+    {
+        SingleChat * singleChat = openSingleChatMap[messageFromJID];
+        singleChat->setChatContent(messageFromJID+":");
+        singleChat->setChatContent(messageBody);
+    }
+    //如果没有打开的话，就会用checkmsg显示
+
 }
 
 void FriendDialog::messageGroupReceived(const QXmppMessage &message)

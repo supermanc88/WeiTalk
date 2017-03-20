@@ -54,6 +54,11 @@ void SingleChat::messageReceived(const QXmppMessage &message)
     qDebug()<<message.body();
 }
 
+void SingleChat::setChatContent(QString message)
+{
+    ui->textBrowser->insertPlainText(message);
+}
+
 QString SingleChat::getContentOfSend() const
 {
 //    contentOfSend = this->ui->sendTextArea->

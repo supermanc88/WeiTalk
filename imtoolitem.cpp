@@ -8,6 +8,7 @@
 #include <QXmppPresence.h>
 #include "singlechat.h"
 
+QMap<QString, SingleChat *> openSingleChatMap;
 extern QXmppClient * globalClient;
 
 IMToolItem::IMToolItem(const QString &title, QWidget *parent) : QWidget(parent)
@@ -107,9 +108,9 @@ void IMToolItem::updatePresence(const QString &bareJid, const QMap<QString, QXmp
 
 void IMToolItem::showItemChatDialog(const QString &bareJid)
 {
-    if(m_singleChatMap.contains(bareJid))
+    if(openSingleChatMap.contains(bareJid))
     {
-        SingleChat * singleChat = m_singleChatMap[bareJid];
+        SingleChat * singleChat = openSingleChatMap[bareJid];
         singleChat->show();
         singleChat->raise();
         singleChat->activateWindow();
@@ -117,7 +118,7 @@ void IMToolItem::showItemChatDialog(const QString &bareJid)
     else
     {
         SingleChat * singleChat = new SingleChat(bareJid);
-        m_singleChatMap[bareJid] = singleChat;
+        openSingleChatMap[bareJid] = singleChat;
         singleChat->setClient(globalClient);
 
         connect(singleChat, SIGNAL(closeSingleChat(QString)), this, SLOT(removeItemFromChatMap(QString)));
@@ -130,7 +131,7 @@ void IMToolItem::showItemChatDialog(const QString &bareJid)
 
 void IMToolItem::removeItemFromChatMap(QString bareJid)
 {
-    m_singleChatMap.remove(bareJid);
+    openSingleChatMap.remove(bareJid);
 }
 
 //void IMToolItem::mousePressEvent(QMouseEvent *event)

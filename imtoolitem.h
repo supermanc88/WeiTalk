@@ -17,6 +17,7 @@ class ListButton;
 class SingleChat;
 
 
+
 class IMToolItem : public QWidget
 {
     Q_OBJECT
@@ -56,8 +57,6 @@ private:
 
     //使用QMap存储好友列表吧，便于后面的搜索
     QMap<QString, FriendItem *> m_jidRosterItemMap;
-
-    QMap<QString, SingleChat *> m_singleChatMap;
 };
 
 #endif // IMTOOLITEM_H

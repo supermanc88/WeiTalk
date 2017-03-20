@@ -34,6 +34,10 @@ public slots:
 
     void messageReceived(const QXmppMessage & message);
 
+
+    //设置聊天内容
+    void setChatContent(QString message);
+
 private:
     Ui::SingleChat *ui;
     QString bareJid;
