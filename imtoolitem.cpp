@@ -78,6 +78,7 @@ FriendItem *IMToolItem::getOrCreateItem(const QString &bareJid)
         m_jidRosterItemMap[bareJid] = item;
         addItem(item);
         return item;
+
     }
 }
 
@@ -92,15 +93,16 @@ FriendItem *IMToolItem::getRosterItemFromBareJid(const QString &bareJid)
 void IMToolItem::updatePresence(const QString &bareJid, const QMap<QString, QXmppPresence> &presences)
 {
     FriendItem *item;
-    if(!bareJid.contains("conference.im.weitainet.com"), Qt::CaseSensitive)
+    if(!bareJid.contains("conference.im.weitainet.com", Qt::CaseSensitive))
     {
         item = getOrCreateItem(bareJid);
-    }
 
-    if (!presences.isEmpty())
-        item->setPresence(*presences.begin());
-    else
-        item->setPresence(QXmppPresence(QXmppPresence::Unavailable));
+
+        if (!presences.isEmpty())
+            item->setPresence(*presences.begin());
+        else
+            item->setPresence(QXmppPresence(QXmppPresence::Unavailable));
+    }
 }
 
 void IMToolItem::showItemChatDialog(const QString &bareJid)
