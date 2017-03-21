@@ -11,6 +11,8 @@
 
 #include "QXmppMucManager.h"
 
+
+class ShowMessage;
 class FriendListArea;
 class GroupListArea;
 class GroupToolItem;
@@ -190,6 +192,8 @@ private:
 
 
     QMap<QString, QXmppMucRoom*> groupRoomMap;
+
+    ShowMessage * m_showMessage;
 
 };
 

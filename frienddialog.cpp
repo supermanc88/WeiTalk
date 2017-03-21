@@ -35,11 +35,14 @@
 #include <QFile>
 #include <QXmlStreamWriter>
 #include "singlechat.h"
-
+#include "showmessage.h"
+#include "itemofmb.h"
 
 extern QString LoginUserName;
 extern QMap<int,WeChat*> openGroupChatMap;
 extern QMap<QString, SingleChat *> openSingleChatMap;
+
+QMap<QString, ItemOfMB *> messageBox;
 
 QXmppClient * globalClient;
 
@@ -70,6 +73,8 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
      */
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 
+
+    m_showMessage = new ShowMessage;
 
     groupList = new QList<group_info_t>;
 
@@ -697,6 +702,12 @@ void FriendDialog::messageReceived(const QXmppMessage &message)
 
     qDebug()<<"the seciton jid is:"<<bareJID;
 
+    //不知道为什么单人聊天也能接收到群组信息了
+    if(bareJID.contains("conference.im.weitainet.com", Qt::CaseSensitive))
+    {
+        return ;
+    }
+
     //说明此对话窗口已经被打开
     if(openSingleChatMap.contains(bareJID))
     {
@@ -704,7 +715,35 @@ void FriendDialog::messageReceived(const QXmppMessage &message)
         singleChat->setChatContent(bareJID + ":" + "\n");
         singleChat->setChatContent("  " + messageBody + "\n");
     }
-    //如果没有打开的话，就会用checkmsg显示
+    else
+    {
+        if(messageBox.contains(bareJID))
+        {
+            //说明有未读的信息
+            ItemOfMB * item = messageBox[bareJID];
+            //
+            int messageCount = item->messageCount();
+            item->setMessageCount(++messageCount);
+
+            m_showMessage->update();
+            m_showMessage->show();
+        }
+        else
+        {
+            //没有未读消息则创建
+            ItemOfMB * item = new ItemOfMB;
+            item->setUsername(bareJID);
+            item->setMessageCount(1);
+
+            messageBox[bareJID] = item;
+
+            m_showMessage->addItem(item);
+            m_showMessage->adjustSize();
+            m_showMessage->update();
+            m_showMessage->show();
+        }
+    }
+    //如果没有打开的话，就会用m_showMessage显示
 
 }
 
@@ -725,6 +764,7 @@ void FriendDialog::messageGroupReceived(const QXmppMessage &message)
 
     QString groupIdstr = messageFrom.section("@", 0, 0);
     int groupid = groupIdstr.toInt();
+    QString bareJID = messageFrom.section("/", 0, 0);
 
     //说明此对话窗口已经被打开
     if(openGroupChatMap.contains(groupid))
@@ -735,7 +775,35 @@ void FriendDialog::messageGroupReceived(const QXmppMessage &message)
         weChat->setChatContent("    " + messageBody + "\n");
 
     }
-    //如果没有打开的话，就会用checkmsg显示
+    else
+    {
+        if(messageBox.contains(bareJID))
+        {
+            //说明有未读的信息
+            ItemOfMB * item = messageBox[bareJID];
+            //
+            int messageCount = item->messageCount();
+            item->setMessageCount(++messageCount);
+
+            m_showMessage->update();
+            m_showMessage->show();
+        }
+        else
+        {
+            //没有未读消息则创建
+            ItemOfMB * item = new ItemOfMB;
+            item->setUsername(bareJID);
+            item->setMessageCount(1);
+
+            messageBox[bareJID] = item;
+
+            m_showMessage->addItem(item);
+            m_showMessage->adjustSize();
+            m_showMessage->update();
+            m_showMessage->show();
+        }
+    }
+    //如果没有打开的话，就会用m_showMessage显示
 
 }
 
