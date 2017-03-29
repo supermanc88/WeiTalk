@@ -153,10 +153,20 @@ void CaptureNotice(int nType, int x, int y, int width, int height, const char *s
 {
     if (nType == 1)	//表示截图完成
     {
-//        qDebug()<<QString(szInfo);
+        qDebug()<<QString(szInfo);
         qDebug()<<"width:"<<width<<"heigth:"<<height;
         QClipboard * board = QApplication::clipboard();
-        thisPointer->ui->label->setPixmap(board->pixmap().scaled(200,200));
+
+        QPixmap pixmap = board->pixmap();
+        pixmap.save("a.png");
+
+        QString picPath = QCoreApplication::applicationDirPath()+"/a.png";
+
+        QString uploadPicPath = QString("<img src=\"%1\"/>").arg(picPath);
+
+        thisPointer->ui->label->setPixmap(pixmap.scaled(200,200));
+
+        thisPointer->ui->textBrowser->insertHtml(uploadPicPath);
 //        thisPointer->ui->label->setPixmap(board->pixmap());
     }
     else if(nType == 2)	//表示取消截图
