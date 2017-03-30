@@ -160,15 +160,15 @@ QLabel:hover{
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>475</y>
+     <y>505</y>
      <width>540</width>
-     <height>155</height>
+     <height>125</height>
     </rect>
    </property>
    <property name="minimumSize">
     <size>
      <width>540</width>
-     <height>155</height>
+     <height>125</height>
     </size>
    </property>
    <property name="styleSheet">
@@ -178,7 +178,7 @@ QLabel:hover{
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>120</y>
+      <y>90</y>
       <width>89</width>
       <height>25</height>
      </rect>
@@ -191,9 +191,9 @@ QLabel:hover{
     <property name="geometry">
      <rect>
       <x>2</x>
-      <y>4</y>
+      <y>10</y>
       <width>531</width>
-      <height>101</height>
+      <height>71</height>
      </rect>
     </property>
    </widget>
@@ -234,6 +234,38 @@ QLabel:hover{
       <width>541</width>
       <height>391</height>
      </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="widget_5" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>475</y>
+     <width>540</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>540</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 127);</string>
+   </property>
+   <widget class="QPushButton" name="captureBtn">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>截图</string>
     </property>
    </widget>
   </widget>

@@ -38,6 +38,11 @@
 #include "showmessage.h"
 #include "itemofmb.h"
 
+#include <qt_windows.h> //添加windows库
+
+#include <QLibrary>
+#include <QDateTime>
+
 extern QString LoginUserName;
 extern QMap<int,WeChat*> openGroupChatMap;
 extern QMap<QString, SingleChat *> openSingleChatMap;
@@ -58,9 +63,96 @@ QXmppClient * globalClient;
  *  确认登录成功之后，显示登录界面
  */
 
+typedef int (__stdcall *FnStartScreenCaptureW)(const wchar_t* szDefaultSavePath, void* pCallBack, UINT_PTR hWndNotice, UINT_PTR noticeMsg, UINT_PTR hwndHideWhenCapture, int autoCapture, int x, int y, int width, int height);
+FnStartScreenCaptureW gl_StartScreenCapture = NULL;
+typedef int (__stdcall *FnInitScreenCaptureW)(const wchar_t* szAuth);
+FnInitScreenCaptureW gl_InitCapture = NULL;
+
+typedef int (__stdcall *FnInitCaptureParamW)(int flag, UINT_PTR flagvalue);
+FnInitCaptureParamW gl_InitCaptureParam = NULL;
+
+typedef enum
+{
+    emPensize = 1,		//设置画笔大小
+    emDrawType,			//设置是腾讯风格还是360风格
+    emTrackColor,		//自动识别的边框的颜色
+    emEditBorderColor,	//文本输入的边框颜色
+    emTransparent,		//工具栏的透明度
+    emWindowAware,		//设置是否禁用随着DPI放大
+    emDetectSubWindowRect,	//是否自动检测子窗口，暂时无用
+    emSetSaveName,		//设置保存时的开始文字
+    emSetMagnifierBkColor, //设置放大镜的背景色，不设置则透明
+    emSetMagnifierLogoText, //设置放大镜上的LOGO字符，可提示快捷键，如： 牛牛截图(CTRL + SHIFT + A)
+    emSetNoticeCallback = 19,				//用于设置控件通知信息的回调函数
+    emSetWatermarkPictureType,						//设置水印的类型
+    emSetWatermarkPicturePath,						//设置水印的路径
+    emSetWatermarkTextType,						//设置水印文字的类型
+    emSetWatermarkTextValue,						//设置水印文字
+    emSetMosaicType,							//设置马赛克类型，1为矩形，2为画线
+    emSetToolbarText,							//设置工具栏上的各按钮的tooltip及显示的文字
+
+}ExtendFlagTypeEnum;
+
+FriendDialog * thisPointer; //全局的FriendDialog指针
+
 FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
 {
     setupUi(this);
+
+/********************初始化截屏start*********************************/
+    thisPointer = this;
+
+    //编译x86还是x64的 在.pro文件中定义
+#ifdef __x86__
+    QString strDllPath = QCoreApplication::applicationDirPath() + "/NiuniuCapturex64.dll";
+#else
+    QString strDllPath = QCoreApplication::applicationDirPath() + "/NiuniuCapture.dll";
+#endif
+
+    //加载截屏动态库
+    QLibrary dll(strDllPath);
+    bool isload = dll.load();
+    Q_ASSERT(isload);
+
+    //获取导出函数地址
+    gl_StartScreenCapture = (FnStartScreenCaptureW)dll.resolve("StartScreenCaptureW");
+    gl_InitCapture = (FnInitScreenCaptureW)dll.resolve("InitScreenCaptureW");
+    gl_InitCaptureParam = (FnInitCaptureParamW)dll.resolve("InitCaptureParamW");
+
+    //初始化配置
+    string authCode = "niuniu";
+    string strPwd = GenerateAuthCode(authCode);
+    wstring wcsCode = QString(strPwd.c_str()).toStdWString();
+
+    //此函数需要先于其他设置函数调用
+    gl_InitCapture(wcsCode.c_str());
+
+    gl_InitCaptureParam(ExtendFlagTypeEnum::emPensize, 2);	//画笔线宽
+    gl_InitCaptureParam(ExtendFlagTypeEnum::emDrawType, 0);	//设置放大镜风格：0： 腾讯风格   1： 360风格
+    gl_InitCaptureParam(ExtendFlagTypeEnum::emTrackColor, QColor(255,0,0).rgb());	//自动识别的边框颜色
+    gl_InitCaptureParam(ExtendFlagTypeEnum::emEditBorderColor, QColor(0,174,255).rgb());	//文字编辑框边框颜色
+    gl_InitCaptureParam(ExtendFlagTypeEnum::emTransparent, 240); //设置工具栏窗口透明度
+
+    wstring strSavePath = QString("牛牛截图").toStdWString();
+    gl_InitCaptureParam(ExtendFlagTypeEnum::emSetSaveName, (UINT_PTR)strSavePath.c_str()); //设置保存时的开始文字
+    gl_InitCaptureParam(ExtendFlagTypeEnum::emSetMagnifierBkColor, QColor(255, 255, 255).rgb()); //设置放大镜的背景色，不设置则透明
+
+    //以下可以设置放大镜上的LOGO文字，如果不设置，默认显示“牛牛截图”
+    //gl_InitCaptureParam(ExtendFlagTypeEnum::emSetMagnifierLogoText, (UINT_PTR)"牛牛截图(Ctrl+Shift+A)");
+    wstring strMagnifierLogoText = QString("  可通过接口设置名称").toStdWString();
+    gl_InitCaptureParam(ExtendFlagTypeEnum::emSetMagnifierLogoText, (UINT_PTR)strMagnifierLogoText.c_str());
+
+    //以下设置工具栏上的各个按钮的tooltip文字以及完成按钮显示的文字信息
+    //tipRectangle|tipCircle|tipArrow|tipBrush|tipGlitter|tipMosaic|tipText|tipUndo|tipSave|tipCancel|tipFinish|txtFinish
+    wstring strToolbarText = QString("Rectangle|Circle|Arrow|Brush|Glitter|Mosaic|Text|Undo|Save|Cancel|Finish|Finish").toStdWString();
+    gl_InitCaptureParam(ExtendFlagTypeEnum::emSetToolbarText, (UINT_PTR)strToolbarText.c_str());
+    gl_InitCaptureParam(ExtendFlagTypeEnum::emWindowAware, 1); //此函数必需窗口创建前调用，其等同于如下代码
+
+
+    gl_InitCaptureParam(ExtendFlagTypeEnum::emSetWatermarkTextValue, (UINT_PTR)"");
+    gl_InitCaptureParam(2, 0);	//参数2的意义，0： 腾讯风格   1： 360风格
+
+/********************初始化截屏end***********************************/
 
     //创建XmppClient
     m_xmppClient = new QXmppClient;
@@ -805,5 +897,15 @@ void FriendDialog::messageGroupReceived(const QXmppMessage &message)
     }
     //如果没有打开的话，就会用m_showMessage显示
 
+}
+
+string FriendDialog::GenerateAuthCode(string strAuthCode)
+{
+    QDateTime time = QDateTime::currentDateTime();
+    QString str = time.toString("yyyyMd");
+    qDebug()<<str;
+    string strPwd = str.toStdString()+strAuthCode;
+
+    return MD5Encode((char*)strPwd.c_str());
 }
 

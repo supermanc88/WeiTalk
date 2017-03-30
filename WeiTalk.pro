@@ -37,6 +37,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network
 TARGET = WeiTalk
 TEMPLATE = app
 
+DEFINES += __x86__
+
 
 SOURCES += main.cpp \
     logindialog.cpp \
@@ -59,7 +61,8 @@ SOURCES += main.cpp \
     groupitem.cpp \
     groupmembermodel.cpp \
     showmessage.cpp \
-    itemofmb.cpp
+    itemofmb.cpp \
+    MD5.cpp
 
 HEADERS  += \
     logindialog.h \
@@ -82,7 +85,8 @@ HEADERS  += \
     groupitem.h \
     groupmembermodel.h \
     showmessage.h \
-    itemofmb.h
+    itemofmb.h \
+    MD5.h
 
 
 FORMS += \

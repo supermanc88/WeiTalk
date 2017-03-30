@@ -4,6 +4,8 @@
 #include <QWidget>
 #include "QXmppClient.h"
 
+#include <qt_windows.h>
+
 class QXmppMessage;
 
 namespace Ui {
@@ -25,6 +27,9 @@ public:
 signals:
     void closeSingleChat(QString bareJid);
 
+    //截图信号
+    void captureFinished(int type);
+
 public slots:
     void ShowMinimize();
     void CloseCurrentWindow();
@@ -38,6 +43,14 @@ public slots:
     //设置聊天内容
     void setChatContent(QString message);
 
+/***************截图功能start******************************/
+    void onCapture();
+
+    //截图回调函数
+    friend void CaptureNotice(int nType, int x, int y, int width, int height, const char *szInfo);
+
+    void OnCaptureFinish(int type);
+/***************截图功能end********************************/
 private:
     Ui::SingleChat *ui;
     QString bareJid;

@@ -186,15 +186,15 @@ background-color: rgb(0, 85, 0);</string>
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>475</y>
+     <y>505</y>
      <width>540</width>
-     <height>155</height>
+     <height>125</height>
     </rect>
    </property>
    <property name="minimumSize">
     <size>
      <width>540</width>
-     <height>155</height>
+     <height>125</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -210,7 +210,7 @@ background-color: rgb(0, 85, 0);</string>
     <property name="geometry">
      <rect>
       <x>12</x>
-      <y>50</y>
+      <y>10</y>
       <width>511</width>
       <height>71</height>
      </rect>
@@ -220,13 +220,45 @@ background-color: rgb(0, 85, 0);</string>
     <property name="geometry">
      <rect>
       <x>420</x>
-      <y>130</y>
+      <y>90</y>
       <width>89</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
      <string>Entry</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="widget_7" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>475</y>
+     <width>540</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>540</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 127);</string>
+   </property>
+   <widget class="QPushButton" name="captureBtn">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>0</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>截图</string>
     </property>
    </widget>
   </widget>

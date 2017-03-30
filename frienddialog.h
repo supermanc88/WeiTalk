@@ -1,4 +1,4 @@
-#ifndef FRIENDDIALOG_H
+﻿#ifndef FRIENDDIALOG_H
 #define FRIENDDIALOG_H
 
 #include <QDialog>
@@ -10,7 +10,11 @@
 #include "weitalkserverapi.h"
 
 #include "QXmppMucManager.h"
+#include <string>
+#include "MD5.h"
 
+
+using namespace std;
 
 class ShowMessage;
 class FriendListArea;
@@ -43,6 +47,12 @@ public:
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void mouseReleaseEvent(QMouseEvent *event);
     virtual void mouseMoveEvent(QMouseEvent *event);
+
+
+/**********************************************************
+ * 截图初始化相关函数*/
+    string GenerateAuthCode(string strAuthCode);
+/**********************************************************/
 
     ~FriendDialog();
 

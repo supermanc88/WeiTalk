@@ -5,6 +5,8 @@
 #include "weitalkserverapi.h"
 #include "QXmppClient.h"
 
+#include <qt_windows.h>
+
 class QVBoxLayout;
 class GroupMemberModel;
 
@@ -15,6 +17,11 @@ class WeChat;
 class WeChat : public QWidget
 {
     Q_OBJECT
+
+signals:
+
+    //截图信号
+    void captureFinished(int type);
 
 public:
     explicit WeChat(int groupId, QWidget *parent = 0);
@@ -42,6 +49,15 @@ public slots:
     void sendMessage();
 
     void setChatContent(QString message);
+
+/***************截图功能start******************************/
+    void onCapture();
+
+    //截图回调函数
+    friend void CaptureNoticeWeChat(int nType, int x, int y, int width, int height, const char *szInfo);
+
+    void OnCaptureFinish(int type);
+/***************截图功能end********************************/
 
 private:
     Ui::WeChat *ui;
