@@ -6,6 +6,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QList>
+#include <qt_windows.h>
 
 //搜索到好友的信息
 typedef struct user_info_s
@@ -63,7 +64,24 @@ public:
      */
     static void SelectGroupUserList(unsigned int groupId, QList<group_member_t> * groupMemberList, int& memberCount);
 
+/**********************************图片上传相关start****************************************/
+    /**
+     * @brief OnUploadPic
+     * @param path          //图片本地路径
+     * @return
+     *
+     * 图片上传
+     */
+    static BOOL OnUploadPic(QString &path);
 
+
+    static QString MakePreFileData(QString &strBoundary, QString &strFileName, int iRecordID);
+
+    static QString MakePostFileData(QString &strBoundary);//发送请求包
+
+    static QString MakeRequestHeaders(QString &strBoundary);//包头
+
+/**********************************图片上传相关end****************************************/
 
 signals:
 

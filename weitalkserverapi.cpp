@@ -203,3 +203,100 @@ void WeiTalkServerAPI::SelectGroupUserList(unsigned int groupId, QList<group_mem
     }
 
 }
+
+BOOL WeiTalkServerAPI::OnUploadPic(QString &path)
+{
+    QString serverName = "upload.weitainet.com";
+    QString strHTTPBoundary = "---------------------------7b4a6d158c9";//定义边界值
+    QString defObjectName = "/upload/upload/?typeid=13&iswkt=1&framename=${framename}";//保存的地址
+
+    QFile picFile(path);
+    qint64 picFileSize = picFile.size();
+
+    QString strPreFileData = MakePreFileData(strHTTPBoundary, path, 1);
+    QString strPostFileData = MakePostFileData(strHTTPBoundary);
+
+    qint64 dwTotalRequestLength = strPreFileData.length() + strPostFileData.length() + picFileSize;//计算整个包的总长度
+
+    QNetworkAccessManager * manager = new QNetworkAccessManager;
+    QNetworkRequest * request = new QNetworkRequest;
+    request->setUrl(serverName + defObjectName);
+    request->setHeader(QNetworkRequest::ContentTypeHeader, QString("multipart/form-data; boundary=%1\r\n").arg(strHTTPBoundary));
+    request->setHeader(QNetworkRequest::ContentLengthHeader, dwTotalRequestLength);
+
+    QByteArray upLoadData = QByteArray();
+
+    upLoadData.append(strPreFileData);
+    upLoadData.append(picFile.readAll());
+    upLoadData.append(strPostFileData);
+
+    QNetworkReply * reply = manager->post(request, upLoadData);
+
+
+
+}
+
+QString WeiTalkServerAPI::MakePreFileData(QString &strBoundary, QString &strFileName, int iRecordID)
+{
+    QString strFormat;
+    QString strData;
+
+    strFormat += "--%1";
+    strFormat += "\r\n";
+    strFormat += "Content-Disposition: form-data; name=\"para1\"";//传给网络上的参数，根据网站抓包查看到底是需要哪些
+    strFormat += "\r\n\r\n";
+    strFormat += "my name is xiaoxiong";
+    strFormat += "\r\n";
+
+    strFormat += "--%2";
+    strFormat += "\r\n";
+    strFormat += "Content-Disposition: form-data; name=\"para2\"";
+    strFormat += "\r\n\r\n";
+    strFormat += "微太网络科技有限公司";
+    strFormat += "\r\n";
+
+    strFormat += "--%3";
+    strFormat += "\r\n";
+    strFormat += "Content-Disposition: form-data; name=\"trackdata\"; filename=\"%4\"";//文件地址信息
+    strFormat += "\r\n";
+    strFormat += "Content-Type: image/bmp";
+
+    strFormat += "\r\n\r\n";
+//    strData.Format(strFormat,  strBoundary, strBoundary, strBoundary, strFileName);//
+    strData = QString(strFormat).arg(strBoundary).arg(strBoundary).arg(strBoundary).arg(strFileName);
+    return strData;
+}
+
+QString WeiTalkServerAPI::MakePostFileData(QString &strBoundary)
+{
+    QString strFormat;
+    QString strData;
+
+    strFormat = "\r\n";
+    strFormat += "--%1";
+    strFormat += "\r\n";
+    strFormat += "Content-Disposition: form-data; name=\"submitted\"";
+    strFormat += "\r\n\r\n";
+    strFormat += "hello";
+    strFormat += "\r\n";
+    strFormat += "--%2--";
+    strFormat += "\r\n";
+
+//    strData.Format(strFormat, strBoundary, strBoundary);
+
+    strData = QString(strFormat).arg(strBoundary).arg(strBoundary);
+
+    return strData;
+}
+
+QString WeiTalkServerAPI::MakeRequestHeaders(QString &strBoundary)
+{
+    QString strFormat;
+    CStringA strData;
+
+    strFormat = "Content-Type: multipart/form-data; boundary=%1\r\n";//二进制文件传送Content-Type类型为: multipart/form-data
+
+//    strData.Format(strFormat, strBoundary);
+    strData = QString(strFormat).arg(strBoundary);
+    return strData;
+}
