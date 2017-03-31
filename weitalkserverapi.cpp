@@ -5,6 +5,7 @@
 #include <QJsonObject>
 #include <QVariantMap>
 #include <QDebug>
+#include <QFile>
 
 
 WeiTalkServerAPI::WeiTalkServerAPI(QObject *parent) : QObject(parent)
@@ -230,7 +231,7 @@ BOOL WeiTalkServerAPI::OnUploadPic(QString &path)
     upLoadData.append(picFile.readAll());
     upLoadData.append(strPostFileData);
 
-    QNetworkReply * reply = manager->post(request, upLoadData);
+    QNetworkReply * reply = manager->post(*request, upLoadData);
 
 
 
@@ -292,7 +293,7 @@ QString WeiTalkServerAPI::MakePostFileData(QString &strBoundary)
 QString WeiTalkServerAPI::MakeRequestHeaders(QString &strBoundary)
 {
     QString strFormat;
-    CStringA strData;
+    QString strData;
 
     strFormat = "Content-Type: multipart/form-data; boundary=%1\r\n";//二进制文件传送Content-Type类型为: multipart/form-data
 
