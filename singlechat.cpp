@@ -6,10 +6,15 @@
 #include <QClipboard>
 #include <QPixmap>
 
+#include <QFile>
+
+#include <QCryptographicHash>
+
 typedef int (__stdcall *FnStartScreenCaptureW)(const wchar_t* szDefaultSavePath, void* pCallBack, UINT_PTR hWndNotice, UINT_PTR noticeMsg, UINT_PTR hwndHideWhenCapture, int autoCapture, int x, int y, int width, int height);
 extern FnStartScreenCaptureW gl_StartScreenCapture; //截图全局函数
 
 SingleChat * singleChatPointer;
+extern QString newPicPath;  //最初的定义在frienddialog
 
 SingleChat::SingleChat(const QString& bareJid, QWidget *parent) :
     QWidget(parent),
@@ -58,9 +63,9 @@ void SingleChat::CloseCurrentWindow()
 
 void SingleChat::SingleSendMessage()
 {
-    QString sendString = this->ui->textArea->text();
+    QString sendString = this->ui->textBrowser_2->toPlainText();
     client->sendMessage(this->bareJid,sendString);
-    this->ui->textArea->setText("");
+    this->ui->textBrowser_2->setPlainText("");
 
     ui->textBrowser->insertPlainText(this->bareJid + ": " + "\n");
     ui->textBrowser->insertPlainText("  " + sendString + "\n");
@@ -109,16 +114,26 @@ void CaptureNotice(int nType, int x, int y, int width, int height, const char *s
         QClipboard * board = QApplication::clipboard();
 
         QPixmap pixmap = board->pixmap();
-        pixmap.save("a.png");
 
-        QString picPath = QCoreApplication::applicationDirPath()+"/a.png";
+        //文件的名字是文件的md5值
+        pixmap.save("90[~VYQFS][Z2}ADFASDFADSFCXVZZ.jpg");
 
-        QString uploadPicPath = QString("<img src=\"%1\"/>").arg(picPath);
+        QString picPath = QCoreApplication::applicationDirPath()+"/90[~VYQFS][Z2}ADFASDFADSFCXVZZ.jpg";
+        QFile theFile(picPath);
 
-//        thisPointer->ui->label->setPixmap(pixmap.scaled(200,200));
+        theFile.open(QIODevice::ReadOnly);
+        QByteArray ba = QCryptographicHash::hash(theFile.readAll(),QCryptographicHash::Md5);
+        theFile.close();
 
-//        thisPointer->ui->textBrowser->insertHtml(uploadPicPath);
-//        thisPointer->ui->label->setPixmap(board->pixmap());
+        newPicPath = QCoreApplication::applicationDirPath()+"/"+QString(ba.toHex())+".jpg";
+        qDebug()<<newPicPath;
+        bool isRename = QFile::rename(picPath, newPicPath);
+        Q_ASSERT(isRename);
+
+        QString uploadPicPath = QString("<img src=\"%1\"/>").arg(newPicPath);
+
+        singleChatPointer->ui->textBrowser_2->insertHtml(uploadPicPath);
+
     }
     else if(nType == 2)	//表示取消截图
     {

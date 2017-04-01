@@ -15,6 +15,8 @@ extern QString LoginUserName;
 
 WeChat * weChatPointer;
 
+extern QString newPicPath;  //最初的定义在frienddialog
+
 typedef int (__stdcall *FnStartScreenCaptureW)(const wchar_t* szDefaultSavePath, void* pCallBack, UINT_PTR hWndNotice, UINT_PTR noticeMsg, UINT_PTR hwndHideWhenCapture, int autoCapture, int x, int y, int width, int height);
 extern FnStartScreenCaptureW gl_StartScreenCapture; //截图全局函数
 
@@ -119,13 +121,13 @@ QString WeChat::getGroupJID()
 
 void WeChat::sendMessage()
 {
-    QString sendText = this->ui->lineEdit->text();
+    QString sendText = this->ui->textBrowser_2->toPlainText();
 
     QString groupJID = getGroupJID();
 
     client->sendMessage(groupJID, sendText);
 
-    this->ui->lineEdit->setText("");
+    this->ui->textBrowser_2->setPlainText("");
 
     this->ui->textBrowser->insertPlainText(LoginUserName + ": " + "\n");
     this->ui->textBrowser->insertPlainText("    " + sendText + "\n");
@@ -172,26 +174,24 @@ void CaptureNoticeWeChat(int nType, int x, int y, int width, int height, const c
         QPixmap pixmap = board->pixmap();
 
         //文件的名字是文件的md5值
-        pixmap.save("a.jpg");
+        pixmap.save("90[~VYQFS][Z2}ADFASDFADSFCXVZZ.jpg");
 
-        QString picPath = QCoreApplication::applicationDirPath()+"/a.jpg";
+        QString picPath = QCoreApplication::applicationDirPath()+"/90[~VYQFS][Z2}ADFASDFADSFCXVZZ.jpg";
         QFile theFile(picPath);
 
         theFile.open(QIODevice::ReadOnly);
         QByteArray ba = QCryptographicHash::hash(theFile.readAll(),QCryptographicHash::Md5);
         theFile.close();
 
-        QString newPicPath = QCoreApplication::applicationDirPath()+"/"+QString(ba.toHex())+".jpg";
+        newPicPath = QCoreApplication::applicationDirPath()+"/"+QString(ba.toHex())+".jpg";
         qDebug()<<newPicPath;
         bool isRename = QFile::rename(picPath, newPicPath);
         Q_ASSERT(isRename);
 
         QString uploadPicPath = QString("<img src=\"%1\"/>").arg(newPicPath);
 
-//        thisPointer->ui->label->setPixmap(pixmap.scaled(200,200));
+        weChatPointer->ui->textBrowser_2->insertHtml(uploadPicPath);
 
-//        thisPointer->ui->textBrowser->insertHtml(uploadPicPath);
-//        thisPointer->ui->label->setPixmap(board->pixmap());
     }
     else if(nType == 2)	//表示取消截图
     {

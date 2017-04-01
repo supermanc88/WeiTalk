@@ -95,6 +95,8 @@ typedef enum
 
 FriendDialog * thisPointer; //全局的FriendDialog指针
 
+QString newPicPath;  //定义全局的图片路径
+
 FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
 {
     setupUi(this);
