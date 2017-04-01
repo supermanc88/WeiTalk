@@ -228,13 +228,35 @@ BOOL WeiTalkServerAPI::OnUploadPic(QString &path)
     QByteArray upLoadData = QByteArray();
 
     upLoadData.append(strPreFileData);
+    if(!picFile.open(QIODevice::ReadOnly))
+    {
+        return false;
+    }
     upLoadData.append(picFile.readAll());
     upLoadData.append(strPostFileData);
 
     QNetworkReply * reply = manager->post(*request, upLoadData);
 
+    QByteArray responseData;
+    QEventLoop eventLoop;
 
+    connect(manager, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
+    eventLoop.exec();
+    responseData = reply->readAll();
+    //"{"filepath":"/uploadfile/13/jpg/2017/04/01/3b2d80ef1059b4b6f08cf0613927c238.jpg","framename":"${framename}","typeid":13,"name":"D:\\WeiTaiTalk\\test11\\C2C\\003b2d80ef1059b4b6f08cf0613927c238.jpg","extname":".jpg","success":true}"	ATL::CStringT<char,StrTraitMFC_DLL<char,ATL::ChTraitsCRT<char> > >
 
+    QJsonDocument d = QJsonDocument::fromJson(responseData);
+    QJsonObject obj = d.object();
+
+    if(obj.contains("filepath"))
+    {
+        path = obj["filepath"].toString();
+        return true;
+    }
+    else
+    {
+        false;
+    }
 }
 
 QString WeiTalkServerAPI::MakePreFileData(QString &strBoundary, QString &strFileName, int iRecordID)

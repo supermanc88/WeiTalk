@@ -37,7 +37,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network
 TARGET = WeiTalk
 TEMPLATE = app
 
-DEFINES += __x86__
+DEFINES += __WINX64__
 
 
 SOURCES += main.cpp \

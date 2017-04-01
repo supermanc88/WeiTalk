@@ -103,7 +103,7 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
     thisPointer = this;
 
     //编译x86还是x64的 在.pro文件中定义
-#ifdef __x86__
+#ifdef __WINX64__
     QString strDllPath = QCoreApplication::applicationDirPath() + "/NiuniuCapturex64.dll";
 #else
     QString strDllPath = QCoreApplication::applicationDirPath() + "/NiuniuCapture.dll";

@@ -30,7 +30,7 @@ SingleChat::SingleChat(const QString& bareJid, QWidget *parent) :
     connect(ui->myLabel_2, SIGNAL(clicked()), this, SLOT(CloseCurrentWindow()));
 
     //connect btn to send message
-    connect(ui->sendMessageBtn, SIGNAL(clicked(bool)), this, SLOT(SendMessage()));
+    connect(ui->sendMessageBtn, SIGNAL(clicked(bool)), this, SLOT(SingleSendMessage()));
 
 
     //connect client to receive some message
@@ -56,7 +56,7 @@ void SingleChat::CloseCurrentWindow()
     this->close();
 }
 
-void SingleChat::SendMessage()
+void SingleChat::SingleSendMessage()
 {
     QString sendString = this->ui->textArea->text();
     client->sendMessage(this->bareJid,sendString);

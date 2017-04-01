@@ -170,11 +170,23 @@ void CaptureNoticeWeChat(int nType, int x, int y, int width, int height, const c
         QClipboard * board = QApplication::clipboard();
 
         QPixmap pixmap = board->pixmap();
-        pixmap.save("a.png");
 
-        QString picPath = QCoreApplication::applicationDirPath()+"/a.png";
+        //文件的名字是文件的md5值
+        pixmap.save("a.jpg");
 
-        QString uploadPicPath = QString("<img src=\"%1\"/>").arg(picPath);
+        QString picPath = QCoreApplication::applicationDirPath()+"/a.jpg";
+        QFile theFile(picPath);
+
+        theFile.open(QIODevice::ReadOnly);
+        QByteArray ba = QCryptographicHash::hash(theFile.readAll(),QCryptographicHash::Md5);
+        theFile.close();
+
+        QString newPicPath = QCoreApplication::applicationDirPath()+"/"+QString(ba.toHex())+".jpg";
+        qDebug()<<newPicPath;
+        bool isRename = QFile::rename(picPath, newPicPath);
+        Q_ASSERT(isRename);
+
+        QString uploadPicPath = QString("<img src=\"%1\"/>").arg(newPicPath);
 
 //        thisPointer->ui->label->setPixmap(pixmap.scaled(200,200));
 

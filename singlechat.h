@@ -35,7 +35,7 @@ public slots:
     void CloseCurrentWindow();
 
     //send message to person
-    void SendMessage();
+    void SingleSendMessage();
 
     void messageReceived(const QXmppMessage & message);
 
