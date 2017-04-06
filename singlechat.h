@@ -30,6 +30,8 @@ signals:
     //截图信号
     void captureFinished(int type);
 
+    void insertCapture();
+
 public slots:
     void ShowMinimize();
     void CloseCurrentWindow();
@@ -41,6 +43,7 @@ public slots:
 
 
     //设置聊天内容
+    void setChatText(QString message);
     void setChatContent(QString message);
 
 /***************截图功能start******************************/
@@ -50,6 +53,8 @@ public slots:
     friend void CaptureNotice(int nType, int x, int y, int width, int height, const char *szInfo);
 
     void OnCaptureFinish(int type);
+
+    void InsertCapture();
 /***************截图功能end********************************/
 private:
     Ui::SingleChat *ui;
@@ -58,6 +63,8 @@ private:
     QXmppClient * client;
 
     QString contentOfSend;
+
+    QString uploadPicPath;
 };
 
 #endif // SINGLECHAT_H

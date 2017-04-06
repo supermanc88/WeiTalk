@@ -43,6 +43,7 @@ SingleChat::SingleChat(const QString& bareJid, QWidget *parent) :
 
     connect(ui->captureBtn, SIGNAL(clicked(bool)), this, SLOT(onCapture()));
     connect(this, SIGNAL(captureFinished(int)), this, SLOT(OnCaptureFinish(int)));
+    connect(this, SIGNAL(insertCapture()), this, SLOT(InsertCapture()));
 }
 
 SingleChat::~SingleChat()
@@ -63,12 +64,12 @@ void SingleChat::CloseCurrentWindow()
 
 void SingleChat::SingleSendMessage()
 {
-    QString sendString = this->ui->textBrowser_2->toPlainText();
+    QString sendString = this->ui->textEdit->toHtml();
     client->sendMessage(this->bareJid,sendString);
-    this->ui->textBrowser_2->setPlainText("");
+    this->ui->textEdit->clear();
 
     ui->textBrowser->insertPlainText(this->bareJid + ": " + "\n");
-    ui->textBrowser->insertPlainText("  " + sendString + "\n");
+    ui->textBrowser->insertHtml("  " + sendString + "\n");
 }
 
 void SingleChat::messageReceived(const QXmppMessage &message)
@@ -76,9 +77,14 @@ void SingleChat::messageReceived(const QXmppMessage &message)
     qDebug()<<message.body();
 }
 
+void SingleChat::setChatText(QString message)
+{
+    ui->textBrowser->insertHtml(message);
+}
+
 void SingleChat::setChatContent(QString message)
 {
-    ui->textBrowser->insertPlainText(message);
+    ui->textBrowser->insertHtml(message);
 }
 
 void SingleChat::onCapture()
@@ -103,6 +109,12 @@ void SingleChat::OnCaptureFinish(int type)
     default:
         break;
     }
+}
+
+void SingleChat::InsertCapture()
+{
+    ui->textEdit->insertHtml(uploadPicPath);
+    ui->textEdit->moveCursor(QTextCursor::End);
 }
 
 void CaptureNotice(int nType, int x, int y, int width, int height, const char *szInfo)
@@ -132,8 +144,8 @@ void CaptureNotice(int nType, int x, int y, int width, int height, const char *s
 
         QString uploadPicPath = QString("<img src=\"%1\"/>").arg(newPicPath);
 
-        singleChatPointer->ui->textBrowser_2->insertHtml(uploadPicPath);
-
+        singleChatPointer->uploadPicPath = uploadPicPath;
+        emit singleChatPointer->insertCapture();
     }
     else if(nType == 2)	//表示取消截图
     {

@@ -219,7 +219,7 @@ background-color: rgb(0, 85, 0);</string>
      <string>Entry</string>
     </property>
    </widget>
-   <widget class="QTextBrowser" name="textBrowser_2">
+   <widget class="QTextEdit" name="textEdit">
     <property name="geometry">
      <rect>
       <x>0</x>

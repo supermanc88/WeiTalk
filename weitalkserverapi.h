@@ -74,13 +74,6 @@ public:
      */
     static BOOL OnUploadPic(QString &path);
 
-
-    static QString MakePreFileData(QString &strBoundary, QString &strFileName, int iRecordID);
-
-    static QString MakePostFileData(QString &strBoundary);//发送请求包
-
-    static QString MakeRequestHeaders(QString &strBoundary);//包头
-
 /**********************************图片上传相关end****************************************/
 
 signals:

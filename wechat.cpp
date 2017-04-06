@@ -50,6 +50,7 @@ WeChat::WeChat(int groupId, QWidget *parent) :
 
     connect(this->ui->captureBtn, SIGNAL(clicked(bool)), this, SLOT(onCapture()));
     connect(this, SIGNAL(captureFinished(int)), this, SLOT(OnCaptureFinish(int)));
+    connect(this, SIGNAL(insertCapture()), this, SLOT(InsertCapture()));
 
 }
 
@@ -121,22 +122,27 @@ QString WeChat::getGroupJID()
 
 void WeChat::sendMessage()
 {
-    QString sendText = this->ui->textBrowser_2->toPlainText();
+    QString sendText = this->ui->textEdit->toHtml();
 
     QString groupJID = getGroupJID();
 
+    qDebug()<<newPicPath;
+    bool isupload = WTAPI.OnUploadPic(newPicPath);
+    Q_ASSERT(isupload);
+    qDebug()<<newPicPath;
+
     client->sendMessage(groupJID, sendText);
 
-    this->ui->textBrowser_2->setPlainText("");
+    this->ui->textEdit->clear();
 
     this->ui->textBrowser->insertPlainText(LoginUserName + ": " + "\n");
-    this->ui->textBrowser->insertPlainText("    " + sendText + "\n");
+    this->ui->textBrowser->insertHtml("    " + sendText + "\n");
 
 }
 
 void WeChat::setChatContent(QString message)
 {
-    this->ui->textBrowser->insertPlainText(message);
+    this->ui->textBrowser->insertHtml(message);
 }
 
 void WeChat::onCapture()
@@ -161,6 +167,12 @@ void WeChat::OnCaptureFinish(int type)
     default:
         break;
     }
+}
+
+void WeChat::InsertCapture()
+{
+    ui->textEdit->insertHtml(uploadPicPath);
+    ui->textEdit->moveCursor(QTextCursor::End);
 }
 
 void CaptureNoticeWeChat(int nType, int x, int y, int width, int height, const char *szInfo)
@@ -190,7 +202,9 @@ void CaptureNoticeWeChat(int nType, int x, int y, int width, int height, const c
 
         QString uploadPicPath = QString("<img src=\"%1\"/>").arg(newPicPath);
 
-        weChatPointer->ui->textBrowser_2->insertHtml(uploadPicPath);
+        weChatPointer->uploadPicPath = uploadPicPath;
+
+        emit weChatPointer->insertCapture();
 
     }
     else if(nType == 2)	//表示取消截图

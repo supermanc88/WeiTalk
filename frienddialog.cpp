@@ -806,7 +806,7 @@ void FriendDialog::messageReceived(const QXmppMessage &message)
     if(openSingleChatMap.contains(bareJID))
     {
         SingleChat * singleChat = openSingleChatMap[bareJID];
-        singleChat->setChatContent(bareJID + ":" + "\n");
+        singleChat->setChatText(bareJID + ":" + "\n");
         singleChat->setChatContent("  " + messageBody + "\n");
     }
     else

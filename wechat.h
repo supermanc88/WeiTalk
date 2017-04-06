@@ -7,6 +7,8 @@
 
 #include <qt_windows.h>
 
+#include "weitalkserverapi.h"
+
 class QVBoxLayout;
 class GroupMemberModel;
 
@@ -22,6 +24,8 @@ signals:
 
     //截图信号
     void captureFinished(int type);
+
+    void insertCapture();
 
 public:
     explicit WeChat(int groupId, QWidget *parent = 0);
@@ -57,6 +61,8 @@ public slots:
     friend void CaptureNoticeWeChat(int nType, int x, int y, int width, int height, const char *szInfo);
 
     void OnCaptureFinish(int type);
+
+    void InsertCapture();
 /***************截图功能end********************************/
 
 private:
@@ -75,6 +81,10 @@ private:
     QVBoxLayout * g_layout;//群组成员列表布局
 
     QXmppClient * client;
+
+    QString uploadPicPath;
+
+    WeiTalkServerAPI WTAPI;
 
 };
 
