@@ -10,12 +10,18 @@
 #include <QClipboard>
 #include <QPixmap>
 
+#include <QDomDocument>
+#include <QDomElement>
+
+#include "sendpicthread.h"
+
 extern QXmppClient * globalClient;
 extern QString LoginUserName;
 
 WeChat * weChatPointer;
 
 extern QString newPicPath;  //最初的定义在frienddialog
+extern QString currentChattingJID; //最初的定义在frienddialog
 
 typedef int (__stdcall *FnStartScreenCaptureW)(const wchar_t* szDefaultSavePath, void* pCallBack, UINT_PTR hWndNotice, UINT_PTR noticeMsg, UINT_PTR hwndHideWhenCapture, int autoCapture, int x, int y, int width, int height);
 extern FnStartScreenCaptureW gl_StartScreenCapture; //截图全局函数
@@ -120,24 +126,56 @@ QString WeChat::getGroupJID()
     return groupJID;
 }
 
+/**
+ * 这里需要把图片和文字分开发送
+ */
 void WeChat::sendMessage()
 {
     QString sendText = this->ui->textEdit->toHtml();
 
+    //判断发送的信息中是否包含图片
+
+    QDomDocument doc;
+    doc.setContent(sendText);
+    QDomElement docElement = doc.documentElement();
+
+    QDomNodeList nodeList = docElement.elementsByTagName("img");
+
+    if(nodeList.count() == 0)
+    {
+
+    }
+    else
+    {
+        for(int i=0; i<nodeList.count(); i++)
+        {
+//            QDomNode node = nodeList.at(i);
+//            qDebug()<< node.toElement().attribute("src");
+
+//            //如果存在src 就替换成上传的地址
+//            bool isupload = WTAPI.OnUploadPic(newPicPath);
+//            Q_ASSERT(isupload);
+
+//            node.toElement().setAttribute("src", "http://upload.weitainet.com"+newPicPath);
+        }
+    }
+
+    sendText = doc.toString();
+
+    sendText = this->ui->textEdit->toPlainText().toHtmlEscaped();
+
     QString groupJID = getGroupJID();
 
-    qDebug()<<newPicPath;
-    bool isupload = WTAPI.OnUploadPic(newPicPath);
-    Q_ASSERT(isupload);
-    qDebug()<<newPicPath;
+    currentChattingJID = groupJID;
 
     client->sendMessage(groupJID, sendText);
 
     this->ui->textEdit->clear();
 
-    this->ui->textBrowser->insertPlainText(LoginUserName + ": " + "\n");
-    this->ui->textBrowser->insertHtml("    " + sendText + "\n");
+    this->ui->textBrowser->insertPlainText(LoginUserName + ": " + "\r\n");
+    this->ui->textBrowser->insertHtml("    " + sendText + "\r\n");
 
+//    ThreadA.wait();
 }
 
 void WeChat::setChatContent(QString message)
@@ -173,6 +211,7 @@ void WeChat::InsertCapture()
 {
     ui->textEdit->insertHtml(uploadPicPath);
     ui->textEdit->moveCursor(QTextCursor::End);
+    ui->textEdit->insertPlainText("\r\n");      //添加一个换行符
 }
 
 void CaptureNoticeWeChat(int nType, int x, int y, int width, int height, const char *szInfo)

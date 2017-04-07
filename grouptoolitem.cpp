@@ -4,7 +4,7 @@
 #include "listbutton.h"
 #include "wechat.h"
 
-QMap<int, WeChat*> openGroupChatMap;
+extern QMap<int, WeChat*> openGroupChatMap;  //定义在frienddialog中
 
 GroupToolItem::GroupToolItem(const QString& string, QWidget *parent) : QWidget(parent)
 {
@@ -73,7 +73,8 @@ void GroupToolItem::showGroupChatDialog(QString groupName, int groupId)
     //否则创建并显示
     if(openGroupChatMap.contains(groupId))
     {
-        openGroupChatMap[groupId]->show();
+        WeChat * weChat = openGroupChatMap[groupId];
+        weChat->show();
     }
     else
     {

@@ -32,7 +32,7 @@ CONFIG(debug, debug|release) {
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network xml
 
 TARGET = WeiTalk
 TEMPLATE = app
@@ -62,7 +62,8 @@ SOURCES += main.cpp \
     groupmembermodel.cpp \
     showmessage.cpp \
     itemofmb.cpp \
-    MD5.cpp
+    MD5.cpp \
+    sendpicthread.cpp
 
 HEADERS  += \
     logindialog.h \
@@ -86,7 +87,8 @@ HEADERS  += \
     groupmembermodel.h \
     showmessage.h \
     itemofmb.h \
-    MD5.h
+    MD5.h \
+    sendpicthread.h
 
 
 FORMS += \

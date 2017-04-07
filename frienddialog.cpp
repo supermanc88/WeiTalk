@@ -51,6 +51,8 @@ QMap<QString, ItemOfMB *> messageBox;
 
 QXmppClient * globalClient;
 
+QString currentChattingJID;
+
 /*
  * 目前这样可以移动整个窗口，先做个样子，后期可以把头部单独拿出来
  * 做一个Dialog 然后重写鼠标事件，再把那个Dialog添加到本Dialog
@@ -96,6 +98,8 @@ typedef enum
 FriendDialog * thisPointer; //全局的FriendDialog指针
 
 QString newPicPath;  //定义全局的图片路径
+
+QMap<int, WeChat*> openGroupChatMap;  //打开的群聊窗口
 
 FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
 {

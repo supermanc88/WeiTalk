@@ -27,6 +27,8 @@ signals:
 
     void insertCapture();
 
+    void uploadPic(); //信号传递给主线程，由主线程发送图片
+
 public:
     explicit WeChat(int groupId, QWidget *parent = 0);
     ~WeChat();
