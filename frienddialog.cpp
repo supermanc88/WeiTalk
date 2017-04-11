@@ -765,15 +765,13 @@ void FriendDialog::configurationReceived(const QXmppDataForm &configuration)
 {
     qDebug()<<"receive the room configuration and set the config";
     QXmppMucRoom * room = qobject_cast<QXmppMucRoom *> (sender());
-//    room->setConfiguration(configuration);
 
-//    room->join();
     QString * str = new QString;
     QXmlStreamWriter writer(str);
 
     configuration.toXml(&writer);
 
-    qWarning()<<*str;
+//    qWarning()<<*str;
 
     QXmppDataForm *configure = new QXmppDataForm;
     configure->setType(QXmppDataForm::Submit);

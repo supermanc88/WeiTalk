@@ -47,6 +47,8 @@ WeChat::WeChat(int groupId, QWidget *parent) :
 
     client = globalClient;
 
+    SendThreadA = new SendPicThread();
+
     API.SelectGroupUserList(this->groupId, groupMemberList, this->memberCount);
 
     qDebug()<<this->groupId;
@@ -57,6 +59,8 @@ WeChat::WeChat(int groupId, QWidget *parent) :
     connect(this->ui->captureBtn, SIGNAL(clicked(bool)), this, SLOT(onCapture()));
     connect(this, SIGNAL(captureFinished(int)), this, SLOT(OnCaptureFinish(int)));
     connect(this, SIGNAL(insertCapture()), this, SLOT(InsertCapture()));
+
+    connect(SendThreadA, SIGNAL(finishedUpLoadPic()), this, SLOT(sendSinglePic()));
 
 }
 
@@ -134,7 +138,6 @@ void WeChat::sendMessage()
     QString sendText = this->ui->textEdit->toHtml();
 
     //判断发送的信息中是否包含图片
-
     QDomDocument doc;
     doc.setContent(sendText);
     QDomElement docElement = doc.documentElement();
@@ -147,8 +150,9 @@ void WeChat::sendMessage()
     }
     else
     {
-        for(int i=0; i<nodeList.count(); i++)
-        {
+        SendThreadA->start();
+//        for(int i=0; i<nodeList.count(); i++)
+//        {
 //            QDomNode node = nodeList.at(i);
 //            qDebug()<< node.toElement().attribute("src");
 
@@ -157,10 +161,11 @@ void WeChat::sendMessage()
 //            Q_ASSERT(isupload);
 
 //            node.toElement().setAttribute("src", "http://upload.weitainet.com"+newPicPath);
-        }
+//        }
     }
 
-    sendText = doc.toString();
+
+//    sendText = doc.toString();
 
     sendText = this->ui->textEdit->toPlainText().toHtmlEscaped();
 
@@ -172,15 +177,28 @@ void WeChat::sendMessage()
 
     this->ui->textEdit->clear();
 
-    this->ui->textBrowser->insertPlainText(LoginUserName + ": " + "\r\n");
+    this->ui->textBrowser->insertPlainText("\r\n" + LoginUserName + ": " + "\r\n");
     this->ui->textBrowser->insertHtml("    " + sendText + "\r\n");
 
-//    ThreadA.wait();
 }
 
 void WeChat::setChatContent(QString message)
 {
     this->ui->textBrowser->insertHtml(message);
+}
+
+void WeChat::sendSinglePic()
+{
+    QString sentHtml = QString("<!DOCTYPE HTML PUBLIC \"-/W3C/DTD HTML 4.0/EN\" \"http:/www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }</style></head><body style=\" font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;\"><p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><img src=\"http://upload.weitainet.com%1\" /></p></body></html>").arg(newPicPath);
+
+    QString groupJID = getGroupJID();
+
+    currentChattingJID = groupJID;
+
+    client->sendMessage(groupJID, sentHtml);
+
+    this->ui->textBrowser->insertPlainText("\r\n" + LoginUserName + ": " + "\r\n");
+    this->ui->textBrowser->insertHtml(sentHtml + "\r\n");
 }
 
 void WeChat::onCapture()

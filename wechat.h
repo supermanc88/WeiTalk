@@ -8,6 +8,7 @@
 #include <qt_windows.h>
 
 #include "weitalkserverapi.h"
+#include <sendpicthread.h>
 
 class QVBoxLayout;
 class GroupMemberModel;
@@ -56,6 +57,9 @@ public slots:
 
     void setChatContent(QString message);
 
+    //只发送图片代码
+    void sendSinglePic();
+
 /***************截图功能start******************************/
     void onCapture();
 
@@ -87,6 +91,8 @@ private:
     QString uploadPicPath;
 
     WeiTalkServerAPI WTAPI;
+
+    SendPicThread * SendThreadA;
 
 };
 
