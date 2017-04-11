@@ -167,7 +167,7 @@ void WeChat::sendMessage()
 
 //    sendText = doc.toString();
 
-    sendText = this->ui->textEdit->toPlainText().toHtmlEscaped();
+//    sendText = this->ui->textEdit->toPlainText().toHtmlEscaped();
 
     QString groupJID = getGroupJID();
 
