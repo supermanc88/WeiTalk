@@ -845,7 +845,7 @@ void FriendDialog::messageReceived(const QXmppMessage &message)
 
 void FriendDialog::messageGroupReceived(const QXmppMessage &message)
 {   
-    qDebug()<<"this is group chat:"<<message.body();
+//    qDebug()<<"this is group chat:"<<message.body();
 
     QString messageBody = message.body();
     QString messageFrom = message.from();

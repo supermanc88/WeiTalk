@@ -9,6 +9,7 @@
 #include <QFile>
 
 #include <QCryptographicHash>
+#include <QDir>
 
 typedef int (__stdcall *FnStartScreenCaptureW)(const wchar_t* szDefaultSavePath, void* pCallBack, UINT_PTR hWndNotice, UINT_PTR noticeMsg, UINT_PTR hwndHideWhenCapture, int autoCapture, int x, int y, int width, int height);
 extern FnStartScreenCaptureW gl_StartScreenCapture; //截图全局函数
@@ -127,17 +128,23 @@ void CaptureNotice(int nType, int x, int y, int width, int height, const char *s
 
         QPixmap pixmap = board->pixmap();
 
-        //文件的名字是文件的md5值
-        pixmap.save("90[~VYQFS][Z2}ADFASDFADSFCXVZZ.jpg");
+        QDir dir(QCoreApplication::applicationDirPath());
+        if(!dir.exists("capture"))
+        {
+            dir.mkdir("capture");
+        }
 
-        QString picPath = QCoreApplication::applicationDirPath()+"/90[~VYQFS][Z2}ADFASDFADSFCXVZZ.jpg";
+        //文件的名字是文件的md5值
+        pixmap.save(QCoreApplication::applicationDirPath()+"/capture/"+"90[~VYQFS][Z2}ADFASDFADSFCXVZZ.jpg");
+
+        QString picPath = QCoreApplication::applicationDirPath()+"/capture/"+"90[~VYQFS][Z2}ADFASDFADSFCXVZZ.jpg";
         QFile theFile(picPath);
 
         theFile.open(QIODevice::ReadOnly);
         QByteArray ba = QCryptographicHash::hash(theFile.readAll(),QCryptographicHash::Md5);
         theFile.close();
 
-        newPicPath = QCoreApplication::applicationDirPath()+"/"+QString(ba.toHex())+".jpg";
+        newPicPath = QCoreApplication::applicationDirPath()+"/capture/"+QString(ba.toHex())+".jpg";
         qDebug()<<newPicPath;
         bool isRename = QFile::rename(picPath, newPicPath);
         Q_ASSERT(isRename);

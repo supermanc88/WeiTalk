@@ -12,6 +12,7 @@
 
 #include <QDomDocument>
 #include <QDomElement>
+#include <QDir>
 
 #include "sendpicthread.h"
 
@@ -151,21 +152,31 @@ void WeChat::sendMessage()
     else
     {
         SendThreadA->start();
-//        for(int i=0; i<nodeList.count(); i++)
-//        {
-//            QDomNode node = nodeList.at(i);
+        for(int i=0; i<nodeList.count(); i++)
+        {
+            QDomNode node = nodeList.at(i);
 //            qDebug()<< node.toElement().attribute("src");
 
-//            //如果存在src 就替换成上传的地址
-//            bool isupload = WTAPI.OnUploadPic(newPicPath);
-//            Q_ASSERT(isupload);
+            //如果存在src 就替换成上传的地址
+            bool isupload = WTAPI.OnUploadPic(newPicPath);
+            Q_ASSERT(isupload);
 
-//            node.toElement().setAttribute("src", "http://upload.weitainet.com"+newPicPath);
-//        }
+            //获取img节点的父节点 p节点
+            QDomNode parentNode = node.parentNode();
+
+            //删除当前的p节点
+            parentNode.parentNode().removeChild(parentNode);
+
+            qDebug()<<"dd删除节点";
+//            node.toElement().setAttribute("src", "http://upload.weitainet.com"+newPicPath);//"http://upload.weitainet.com"+newPicPath
+
+        }
+//        doc = docElement.toDocument();
     }
 
 
-//    sendText = doc.toString();
+    sendText = doc.toString();
+    qDebug()<<sendText;
 
 //    sendText = this->ui->textEdit->toPlainText().toHtmlEscaped();
 
@@ -189,7 +200,7 @@ void WeChat::setChatContent(QString message)
 
 void WeChat::sendSinglePic()
 {
-    QString sentHtml = QString("<!DOCTYPE HTML PUBLIC \"-/W3C/DTD HTML 4.0/EN\" \"http:/www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }</style></head><body style=\" font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;\"><p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><img src=\"http://upload.weitainet.com%1\" /></p></body></html>").arg(newPicPath);
+    QString sentHtml = QString("<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.0//EN' 'http://www.w3.org/TR/REC-html40/strict.dtd'>\n<html>\n <head>\n  <meta content=\"1\" name=\"qrichtext\"/>\n  <style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style>\n </head>\n <body style=\" font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;\">\n  <p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\n   <img src=\"http://upload.weitainet.com%1\"/>\n  </p>\n  <p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\n   <br/>\n  </p>\n </body>\n</html>\n").arg(newPicPath);
 
     QString groupJID = getGroupJID();
 
@@ -242,17 +253,23 @@ void CaptureNoticeWeChat(int nType, int x, int y, int width, int height, const c
 
         QPixmap pixmap = board->pixmap();
 
-        //文件的名字是文件的md5值
-        pixmap.save("90[~VYQFS][Z2}ADFASDFADSFCXVZZ.jpg");
+        QDir dir(QCoreApplication::applicationDirPath());
+        if(!dir.exists("capture"))
+        {
+            dir.mkdir("capture");
+        }
 
-        QString picPath = QCoreApplication::applicationDirPath()+"/90[~VYQFS][Z2}ADFASDFADSFCXVZZ.jpg";
+        //文件的名字是文件的md5值
+        pixmap.save(QCoreApplication::applicationDirPath()+"/capture/"+"90[~VYQFS][Z2}ADFASDFADSFCXVZZ.jpg");
+
+        QString picPath = QCoreApplication::applicationDirPath()+"/capture/"+"90[~VYQFS][Z2}ADFASDFADSFCXVZZ.jpg";
         QFile theFile(picPath);
 
         theFile.open(QIODevice::ReadOnly);
         QByteArray ba = QCryptographicHash::hash(theFile.readAll(),QCryptographicHash::Md5);
         theFile.close();
 
-        newPicPath = QCoreApplication::applicationDirPath()+"/"+QString(ba.toHex())+".jpg";
+        newPicPath = QCoreApplication::applicationDirPath()+"/capture/"+QString(ba.toHex())+".jpg";
         qDebug()<<newPicPath;
         bool isRename = QFile::rename(picPath, newPicPath);
         Q_ASSERT(isRename);
