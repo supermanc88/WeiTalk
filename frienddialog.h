@@ -64,6 +64,8 @@ public slots:
 
     void runApp();
 
+    void showFriendDialog();
+
     void InitGlobalClient();
 
     void rosterReceived();

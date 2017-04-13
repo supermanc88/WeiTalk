@@ -43,7 +43,7 @@
 #include <QLibrary>
 #include <QDateTime>
 
-extern QString LoginUserName;
+extern QString LoginUserName;   //定义在logindialog中
 extern QMap<int,WeChat*> openGroupChatMap;
 extern QMap<QString, SingleChat *> openSingleChatMap;
 
@@ -321,8 +321,14 @@ void FriendDialog::runApp()
 {
     m_loginDialog = new LoginDialog(this->m_xmppClient);
     m_loginDialog->show();
-    connect(this->m_loginDialog, SIGNAL(loginSucess()), this, SLOT(show()));
+    connect(this->m_loginDialog, SIGNAL(loginSucess()), this, SLOT(showFriendDialog()));
     connect(this->m_loginDialog, SIGNAL(loginSucess()), this, SLOT(InitGlobalClient()));
+}
+
+void FriendDialog::showFriendDialog()
+{
+    this->label->setText(LoginUserName);
+    this->show();
 }
 
 void FriendDialog::InitGlobalClient()

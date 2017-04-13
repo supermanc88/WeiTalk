@@ -21,7 +21,7 @@
  * 在主窗口设置为true，别的窗口设置为false
  * 当关闭主窗口时，所有的窗口也将被关闭
  */
-QString LoginUserName;
+QString LoginUserName;   //全局的登录用户名
 
 LoginDialog::LoginDialog(QXmppClient *xmppClient, QWidget *parent) : QDialog(parent)
 {
