@@ -174,6 +174,15 @@ public slots:
 
 /****************************************************/
 
+
+/***************************最小化到托盘start**************/
+
+    void on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason);     //托盘双击响应
+
+    void initSysTrayContextMenu();  //初始化设置托盘菜单
+
+/***************************最小化到托盘end****************/
+
 private:
     bool m_moving;
     QPoint m_movePosition;
@@ -204,6 +213,11 @@ private:
     QMap<QString, QXmppMucRoom*> groupRoomMap;
 
     ShowMessage * m_showMessage;
+
+
+    QSystemTrayIcon * m_trayIcon; //系统托盘
+
+    QMenu * m_sysTrayMenu; //托盘菜单
 
 };
 

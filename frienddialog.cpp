@@ -105,6 +105,12 @@ FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
 {
     setupUi(this);
 
+/*******************初始化托盘相关start*******************/
+    m_trayIcon = new QSystemTrayIcon;
+    initSysTrayContextMenu();
+/*******************初始化托盘相关end*********************/
+
+
 /********************初始化截屏start*********************************/
     thisPointer = this;
 
@@ -284,7 +290,20 @@ FriendDialog::~FriendDialog()
 
 void FriendDialog::ShowMinimize()
 {
-    this->showMinimized();
+//    this->showMinimized();
+    this->hide();
+
+    QIcon icon = QIcon(":/images/avatar.png");
+
+    m_trayIcon->setIcon(icon);
+
+    m_trayIcon->setToolTip(tr("显示托盘"));
+
+    //给QSystemTrayIcon添加槽函数
+    connect(m_trayIcon,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason)));
+
+    m_trayIcon->setContextMenu(m_sysTrayMenu);
+    m_trayIcon->show();
 }
 
 void FriendDialog::CloseApp()
@@ -901,6 +920,54 @@ void FriendDialog::messageGroupReceived(const QXmppMessage &message)
     }
     //如果没有打开的话，就会用m_showMessage显示
 
+}
+
+void FriendDialog::on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason) {
+    case QSystemTrayIcon::Trigger:
+
+        break;
+
+    case QSystemTrayIcon::DoubleClick:
+        this->show();
+        break;
+
+    default:
+        break;
+    }
+}
+
+void FriendDialog::initSysTrayContextMenu()
+{
+    m_sysTrayMenu = new QMenu;
+    //菜单栏里的动作
+
+    QAction *imaway, *imbusy, *imcallme, *imhidden, *imoffline, *imonline, *imsilent;
+
+    imaway = new QAction(tr("离开"), this);
+    imbusy = new QAction(tr("忙碌"), this);
+    imcallme = new QAction(tr("联系我吧"), this);
+    imhidden = new QAction(tr("隐身"), this);
+    imoffline = new QAction(tr("离线"), this);
+    imonline = new QAction(tr("我在线上"), this);
+    imsilent = new QAction(tr("请勿打扰"), this);
+
+    imaway->setIcon(QIcon(":/images/imaway.png"));
+    imbusy->setIcon(QIcon(":/images/imbusy.png"));
+    imcallme->setIcon(QIcon(":/images/imcallme.png"));
+    imhidden->setIcon(QIcon(":/images/imhidden.png"));
+    imoffline->setIcon(QIcon(":/images/imoffline.png"));
+    imonline->setIcon(QIcon(":/images/imonline.png"));
+    imsilent->setIcon(QIcon(":/images/imsilent.png"));
+
+    m_sysTrayMenu->addAction(imaway);
+    m_sysTrayMenu->addAction(imbusy);
+    m_sysTrayMenu->addAction(imcallme);
+    m_sysTrayMenu->addAction(imhidden);
+    m_sysTrayMenu->addAction(imoffline);
+    m_sysTrayMenu->addAction(imonline);
+    m_sysTrayMenu->addAction(imsilent);
 }
 
 string FriendDialog::GenerateAuthCode(string strAuthCode)
