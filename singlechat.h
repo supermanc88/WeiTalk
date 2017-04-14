@@ -5,6 +5,7 @@
 #include "QXmppClient.h"
 
 #include <qt_windows.h>
+#include "sendpicthread.h"
 
 class QXmppMessage;
 
@@ -46,6 +47,9 @@ public slots:
     void setChatText(QString message);
     void setChatContent(QString message);
 
+    //只发送图片代码
+    void sendSinglePic();
+
 /***************截图功能start******************************/
     void onCapture();
 
@@ -65,6 +69,8 @@ private:
     QString contentOfSend;
 
     QString uploadPicPath;
+
+    SendPicThread * SendThreadA;
 };
 
 #endif // SINGLECHAT_H

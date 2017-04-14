@@ -892,8 +892,8 @@ void FriendDialog::messageGroupReceived(const QXmppMessage &message)
     {
         WeChat * weChat = openGroupChatMap[groupid];
 
-        weChat->setChatContent(messageFrom + ": " + "\n");
-        weChat->setChatContent("    " + messageBody + "\n");
+        weChat->setChatContent("\r\n" + messageFrom + ": " + "\r\n");
+        weChat->setChatContent("    " + messageBody + "\r\n");
 
     }
     else

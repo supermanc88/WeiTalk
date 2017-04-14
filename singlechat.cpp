@@ -9,6 +9,8 @@
 #include <QFile>
 
 #include <QCryptographicHash>
+#include <QDomDocument>
+#include <QDomElement>
 #include <QDir>
 
 typedef int (__stdcall *FnStartScreenCaptureW)(const wchar_t* szDefaultSavePath, void* pCallBack, UINT_PTR hWndNotice, UINT_PTR noticeMsg, UINT_PTR hwndHideWhenCapture, int autoCapture, int x, int y, int width, int height);
@@ -16,6 +18,8 @@ extern FnStartScreenCaptureW gl_StartScreenCapture; //截图全局函数
 
 SingleChat * singleChatPointer;
 extern QString newPicPath;  //最初的定义在frienddialog
+extern QString currentChattingJID; //最初的定义在frienddialog
+extern QString LoginUserName;
 
 SingleChat::SingleChat(const QString& bareJid, QWidget *parent) :
     QWidget(parent),
@@ -32,6 +36,8 @@ SingleChat::SingleChat(const QString& bareJid, QWidget *parent) :
 
     setWindowFlags(Qt::FramelessWindowHint);
 
+    SendThreadA = new SendPicThread();
+
     connect(ui->myLabel, SIGNAL(clicked()), this, SLOT(ShowMinimize()));
     connect(ui->myLabel_2, SIGNAL(clicked()), this, SLOT(CloseCurrentWindow()));
 
@@ -45,6 +51,8 @@ SingleChat::SingleChat(const QString& bareJid, QWidget *parent) :
     connect(ui->captureBtn, SIGNAL(clicked(bool)), this, SLOT(onCapture()));
     connect(this, SIGNAL(captureFinished(int)), this, SLOT(OnCaptureFinish(int)));
     connect(this, SIGNAL(insertCapture()), this, SLOT(InsertCapture()));
+
+    connect(SendThreadA, SIGNAL(finishedUpLoadPic()), this, SLOT(sendSinglePic()));
 }
 
 SingleChat::~SingleChat()
@@ -66,11 +74,42 @@ void SingleChat::CloseCurrentWindow()
 void SingleChat::SingleSendMessage()
 {
     QString sendString = this->ui->textEdit->toHtml();
+
+    //判断发送的信息中是否包含图片
+    QDomDocument doc;
+    doc.setContent(sendString);
+    QDomElement docElement = doc.documentElement();
+
+    QDomNodeList nodeList = docElement.elementsByTagName("img");
+
+    if(nodeList.count() == 0)
+    {
+
+    }
+    else
+    {
+        SendThreadA->start();
+        for(int i=0; i<nodeList.count(); i++)
+        {
+            QDomNode node = nodeList.at(i);
+            //获取img节点的父节点 p节点
+            QDomNode parentNode = node.parentNode();
+
+            //删除当前的p节点
+            parentNode.parentNode().removeChild(parentNode);
+
+            qDebug()<<"dd删除节点";
+        }
+    }
+    sendString = doc.toString();
+    qDebug()<<sendString;
+
     client->sendMessage(this->bareJid,sendString);
     this->ui->textEdit->clear();
 
-    ui->textBrowser->insertPlainText(this->bareJid + ": " + "\n");
-    ui->textBrowser->insertHtml("  " + sendString + "\n");
+    ui->textBrowser->insertPlainText(LoginUserName + ": " + "\r\n");
+    ui->textBrowser->insertHtml("  " + sendString + "\r\n");
+    this->ui->textBrowser->textCursor().movePosition(QTextCursor::End);
 }
 
 void SingleChat::messageReceived(const QXmppMessage &message)
@@ -81,11 +120,28 @@ void SingleChat::messageReceived(const QXmppMessage &message)
 void SingleChat::setChatText(QString message)
 {
     ui->textBrowser->insertHtml(message);
+    this->ui->textBrowser->textCursor().movePosition(QTextCursor::End);
 }
 
 void SingleChat::setChatContent(QString message)
 {
     ui->textBrowser->insertHtml(message);
+    this->ui->textBrowser->textCursor().movePosition(QTextCursor::End);
+}
+
+void SingleChat::sendSinglePic()
+{
+    QString sentHtml = QString("<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.0//EN' 'http://www.w3.org/TR/REC-html40/strict.dtd'>\n<html>\n <head>\n  <meta content=\"1\" name=\"qrichtext\"/>\n  <style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style>\n </head>\n <body style=\" font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;\">\n  <p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\n   <img src=\"http://upload.weitainet.com%1\"/>\n  </p>\n  <p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\n   <br/>\n  </p>\n </body>\n</html>\n").arg(newPicPath);
+
+    QString userJID = bareJid;
+
+    currentChattingJID = userJID;
+
+    client->sendMessage(userJID, sentHtml);
+
+    this->ui->textBrowser->insertPlainText("\r\n" + LoginUserName + ": " + "\r\n");
+    this->ui->textBrowser->insertHtml(sentHtml + "\r\n");
+
 }
 
 void SingleChat::onCapture()

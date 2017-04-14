@@ -158,8 +158,8 @@ void WeChat::sendMessage()
 //            qDebug()<< node.toElement().attribute("src");
 
             //如果存在src 就替换成上传的地址
-            bool isupload = WTAPI.OnUploadPic(newPicPath);
-            Q_ASSERT(isupload);
+//            bool isupload = WTAPI.OnUploadPic(newPicPath);
+//            Q_ASSERT(isupload);
 
             //获取img节点的父节点 p节点
             QDomNode parentNode = node.parentNode();
@@ -190,12 +190,17 @@ void WeChat::sendMessage()
 
     this->ui->textBrowser->insertPlainText("\r\n" + LoginUserName + ": " + "\r\n");
     this->ui->textBrowser->insertHtml("    " + sendText + "\r\n");
+    this->ui->textBrowser->textCursor().movePosition(QTextCursor::End);
 
 }
 
 void WeChat::setChatContent(QString message)
 {
+    this->ui->textEdit->insertPlainText("\r\n"); //添加换行符
     this->ui->textBrowser->insertHtml(message);
+    this->ui->textBrowser->textCursor().movePosition(QTextCursor::End);
+
+//    this->ui->textBrowser->append(message);
 }
 
 void WeChat::sendSinglePic()
