@@ -88,7 +88,7 @@ void SearchWidget::searchUser(const QString &searchContent)
 
     qDebug()<<"总共页数:"<<totalPageNum;
 
-    if(totalPageNum == 1)
+    if(totalPageNum == 1 || totalPageNum == 0)
     {
         showOnWidget(1); //默认显示1页
     }
@@ -112,15 +112,23 @@ void SearchWidget::searchGroup(const QString &searchContent)
 
     totalPageNum = ceil(groupList.size() / 6.0);//向上取整
 
-    if(totalPageNum == 1)
+    if(groupList.size() == 0)
     {
-        showOnWidget(1); //默认显示1页
+
     }
     else
     {
-        showPagination(); //如果页数大于一页，就显示分页
-        showOnWidget(1);
+        if(totalPageNum == 1 || totalPageNum == 0)
+        {
+            showOnWidget(1); //默认显示1页
+        }
+        else
+        {
+            showPagination(); //如果页数大于一页，就显示分页
+            showOnWidget(1);
+        }
     }
+
 }
 
 void SearchWidget::showOnWidget(int pageNum)
