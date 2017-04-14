@@ -63,7 +63,8 @@ SOURCES += main.cpp \
     showmessage.cpp \
     itemofmb.cpp \
     MD5.cpp \
-    sendpicthread.cpp
+    sendpicthread.cpp \
+    myemotion.cpp
 
 HEADERS  += \
     logindialog.h \
@@ -88,7 +89,8 @@ HEADERS  += \
     showmessage.h \
     itemofmb.h \
     MD5.h \
-    sendpicthread.h
+    sendpicthread.h \
+    myemotion.h
 
 
 FORMS += \
@@ -105,7 +107,8 @@ FORMS += \
     groupitem.ui \
     groupmembermodel.ui \
     showmessage.ui \
-    itemofmb.ui
+    itemofmb.ui \
+    myemotion.ui
 
 RESOURCES += \
     faces.qrc \
