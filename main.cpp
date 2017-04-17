@@ -8,6 +8,8 @@
 
 //#include "groupitem.h"
 
+#include "myemotion.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -16,12 +18,19 @@ int main(int argc, char *argv[])
 //    LoginDialog w;
 //    w.show();
 
-    FriendDialog w;
-    w.runApp();
+/***********聊天入口start*************/
+//    FriendDialog w;
+//    w.runApp();
+/***********聊天入口end***************/
 
 //    GroupItem w;
 //    w.show();
 
+/***********表情测试start*************/
+    MyEmotion w;
+    w.show();
+    w.initEmotion();
+/************表情测试end**************/
 
     return a.exec();
 }

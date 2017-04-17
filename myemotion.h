@@ -2,6 +2,7 @@
 #define MYEMOTION_H
 
 #include <QWidget>
+#include <QList>
 
 namespace Ui {
 class MyEmotion;
@@ -15,8 +16,12 @@ public:
     explicit MyEmotion(QWidget *parent = 0);
     ~MyEmotion();
 
+    void addEmotionItem(QString fileName);
+    void initEmotion();
+
 private:
     Ui::MyEmotion *ui;
+    QList<QString> m_emotionList;
 };
 
 #endif // MYEMOTION_H
