@@ -73,12 +73,13 @@ public slots:
     //好友状态改变
     void presenceChanged(const QString& bareJid, const QString& resource);
 
-    //好友申请
+/***************************申请好友start******************/
+    //收到好友申请，并回复
     void presenceReceived(const QXmppPresence& presence);
 
     //添加好友
     void addContact();
-
+/***************************申请好友end*********************/
     //删除好友
     void actionRemovecontact(const QString & bareJid);
 

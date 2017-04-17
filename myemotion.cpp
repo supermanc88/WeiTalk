@@ -32,12 +32,10 @@ void MyEmotion::addEmotionItem(QString fileName)
 
     //添加gif表情
     QLabel * emotionIcon = new QLabel;
-    emotionIcon->setMargin(8);
+    emotionIcon->setMargin(4);
 
     QMovie * movie = new QMovie(fileName);
     movie->setScaledSize(QSize(24, 24));
-//    movie->setFileName(fileName);
-//    movie->setCacheMode(QMovie::CacheAll);
     movie->start();
     emotionIcon->setMovie(movie);
     this->ui->tableWidget->setCellWidget(row, column, emotionIcon);
@@ -56,6 +54,4 @@ void MyEmotion::initEmotion()
         qDebug()<<i;
         addEmotionItem(path.arg(i+1));
     }
-
-
 }

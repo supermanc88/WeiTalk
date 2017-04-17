@@ -16,6 +16,7 @@
 
 #include "sendpicthread.h"
 
+
 extern QXmppClient * globalClient;
 extern QString LoginUserName;
 
@@ -54,6 +55,11 @@ WeChat::WeChat(int groupId, QWidget *parent) :
 
     qDebug()<<this->groupId;
 
+    /*********************emotion 初始化 start***********/
+    emotion = new MyEmotion;
+    emotion->initEmotion();
+    /*********************emotion 初始化 end*************/
+
     //connect sendmessagebtn to funtion sendmessage
     connect(this->ui->sendMessageBtn, SIGNAL(clicked(bool)), this, SLOT(sendMessage()));
 
@@ -63,6 +69,8 @@ WeChat::WeChat(int groupId, QWidget *parent) :
 
     connect(SendThreadA, SIGNAL(finishedUpLoadPic()), this, SLOT(sendSinglePic()));
 
+    //关联表情点击
+    connect(this->ui->emotionBtn, SIGNAL(clicked(bool)), this, SLOT(showEmotion()));
 }
 
 WeChat::~WeChat()
@@ -215,6 +223,18 @@ void WeChat::sendSinglePic()
 
     this->ui->textBrowser->insertPlainText("\r\n" + LoginUserName + ": " + "\r\n");
     this->ui->textBrowser->insertHtml(sentHtml + "\r\n");
+}
+
+void WeChat::showEmotion()
+{
+    if(emotion->isHidden())
+    {
+        emotion->show();
+    }
+    else
+    {
+        emotion->hide();
+    }
 }
 
 void WeChat::onCapture()

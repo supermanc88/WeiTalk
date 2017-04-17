@@ -34,9 +34,14 @@ SingleChat::SingleChat(const QString& bareJid, QWidget *parent) :
 
     setAttribute(Qt::WA_QuitOnClose, false);
 
-    setWindowFlags(Qt::FramelessWindowHint);
+//    setWindowFlags(Qt::FramelessWindowHint);
 
     SendThreadA = new SendPicThread();
+
+    /*********************emotion 初始化 start***********/
+    emotion = new MyEmotion;
+    emotion->initEmotion();
+    /*********************emotion 初始化 end*************/
 
     connect(ui->myLabel, SIGNAL(clicked()), this, SLOT(ShowMinimize()));
     connect(ui->myLabel_2, SIGNAL(clicked()), this, SLOT(CloseCurrentWindow()));
@@ -53,6 +58,10 @@ SingleChat::SingleChat(const QString& bareJid, QWidget *parent) :
     connect(this, SIGNAL(insertCapture()), this, SLOT(InsertCapture()));
 
     connect(SendThreadA, SIGNAL(finishedUpLoadPic()), this, SLOT(sendSinglePic()));
+
+    //关联表情点击
+    connect(this->ui->emotionBtn, SIGNAL(clicked(bool)), this, SLOT(showEmotion()));
+
 }
 
 SingleChat::~SingleChat()
@@ -119,13 +128,13 @@ void SingleChat::messageReceived(const QXmppMessage &message)
 
 void SingleChat::setChatText(QString message)
 {
-    ui->textBrowser->insertHtml(message);
+    ui->textBrowser->insertHtml(message + "\r\n");
     this->ui->textBrowser->textCursor().movePosition(QTextCursor::End);
 }
 
 void SingleChat::setChatContent(QString message)
 {
-    ui->textBrowser->insertHtml(message);
+    ui->textBrowser->insertHtml(message + "\r\n");
     this->ui->textBrowser->textCursor().movePosition(QTextCursor::End);
 }
 
@@ -141,6 +150,19 @@ void SingleChat::sendSinglePic()
 
     this->ui->textBrowser->insertPlainText("\r\n" + LoginUserName + ": " + "\r\n");
     this->ui->textBrowser->insertHtml(sentHtml + "\r\n");
+
+}
+
+void SingleChat::showEmotion()
+{
+    if(emotion->isHidden())
+    {
+        emotion->show();
+    }
+    else
+    {
+        emotion->hide();
+    }
 
 }
 

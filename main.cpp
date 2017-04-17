@@ -19,17 +19,17 @@ int main(int argc, char *argv[])
 //    w.show();
 
 /***********聊天入口start*************/
-//    FriendDialog w;
-//    w.runApp();
+    FriendDialog w;
+    w.runApp();
 /***********聊天入口end***************/
 
 //    GroupItem w;
 //    w.show();
 
 /***********表情测试start*************/
-    MyEmotion w;
-    w.show();
-    w.initEmotion();
+//    MyEmotion w;
+//    w.show();
+//    w.initEmotion();
 /************表情测试end**************/
 
     return a.exec();

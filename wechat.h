@@ -10,6 +10,8 @@
 #include "weitalkserverapi.h"
 #include <sendpicthread.h>
 
+#include "myemotion.h"
+
 class QVBoxLayout;
 class GroupMemberModel;
 
@@ -60,6 +62,9 @@ public slots:
     //只发送图片代码
     void sendSinglePic();
 
+    //显示表情界面
+    void showEmotion();
+
 /***************截图功能start******************************/
     void onCapture();
 
@@ -93,6 +98,8 @@ private:
     WeiTalkServerAPI WTAPI;
 
     SendPicThread * SendThreadA;
+
+    MyEmotion * emotion;
 
 };
 

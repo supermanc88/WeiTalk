@@ -268,6 +268,19 @@ QLabel:hover{
      <string>截图</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="emotionBtn">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>0</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>表情</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <customwidgets>

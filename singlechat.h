@@ -7,6 +7,8 @@
 #include <qt_windows.h>
 #include "sendpicthread.h"
 
+#include "myemotion.h"
+
 class QXmppMessage;
 
 namespace Ui {
@@ -50,6 +52,9 @@ public slots:
     //只发送图片代码
     void sendSinglePic();
 
+    //显示表情界面
+    void showEmotion();
+
 /***************截图功能start******************************/
     void onCapture();
 
@@ -71,6 +76,8 @@ private:
     QString uploadPicPath;
 
     SendPicThread * SendThreadA;
+
+    MyEmotion * emotion;
 };
 
 #endif // SINGLECHAT_H
