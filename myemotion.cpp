@@ -6,6 +6,8 @@
 #include <QMovie>
 #include <QSize>
 
+#include <QDebug>
+
 MyEmotion::MyEmotion(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MyEmotion)
@@ -21,33 +23,38 @@ MyEmotion::~MyEmotion()
 //添加表情
 void MyEmotion::addEmotionItem(QString fileName)
 {
-    int row = m_emotionList.size() / this->ui->tableWidget->rowCount();
-    int column = m_emotionList.size() % this->ui->tableWidget->rowCount();
+    int row = m_emotionList.size() / this->ui->tableWidget->columnCount();
+    qDebug()<<"columnCount: "<<this->ui->tableWidget->columnCount();
+    int column = m_emotionList.size() % this->ui->tableWidget->columnCount();
 
     QTableWidgetItem * tableWidgetItem = new QTableWidgetItem;
     ui->tableWidget->setItem(row, column, tableWidgetItem);
 
     //添加gif表情
     QLabel * emotionIcon = new QLabel;
-    emotionIcon->setMargin(4);
+    emotionIcon->setMargin(8);
 
-    QMovie * movie = new QMovie;
+    QMovie * movie = new QMovie(fileName);
     movie->setScaledSize(QSize(24, 24));
-    movie->setFileName(fileName);
+//    movie->setFileName(fileName);
+//    movie->setCacheMode(QMovie::CacheAll);
     movie->start();
     emotionIcon->setMovie(movie);
     this->ui->tableWidget->setCellWidget(row, column, emotionIcon);
 
     m_emotionList.push_back(fileName);
 
+    qDebug()<<"movie->loopCount: "<<movie->loopCount();
+
 }
 
 void MyEmotion::initEmotion()
 {
-    QString path = ":/faces/classic/%1.gif";
-    for(int i=0; i<16; i++)
+    QString path = ":/faces/emotion/%1.gif";
+    for(int i=0; i<24; i++)
     {
-        addEmotionItem(path.arg(i));
+        qDebug()<<i;
+        addEmotionItem(path.arg(i+1));
     }
 
 

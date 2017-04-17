@@ -111,8 +111,8 @@ FORMS += \
     myemotion.ui
 
 RESOURCES += \
-    faces.qrc \
-    images.qrc
+    images.qrc \
+    faces.qrc
 
 DISTFILES +=
 
