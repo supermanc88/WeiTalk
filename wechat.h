@@ -76,6 +76,9 @@ public slots:
     void InsertCapture();
 /***************截图功能end********************************/
 
+    //插入表情
+    void insertEmotion(int row, int column);
+
 private:
     Ui::WeChat *ui;
     int groupId;

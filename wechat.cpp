@@ -56,7 +56,7 @@ WeChat::WeChat(int groupId, QWidget *parent) :
     qDebug()<<this->groupId;
 
     /*********************emotion 初始化 start***********/
-    emotion = new MyEmotion;
+    emotion = new MyEmotion();
     emotion->initEmotion();
     /*********************emotion 初始化 end*************/
 
@@ -71,6 +71,7 @@ WeChat::WeChat(int groupId, QWidget *parent) :
 
     //关联表情点击
     connect(this->ui->emotionBtn, SIGNAL(clicked(bool)), this, SLOT(showEmotion()));
+    connect(this->emotion, SIGNAL(cellClicked(int,int)), this, SLOT(insertEmotion(int,int)));
 }
 
 WeChat::~WeChat()
@@ -233,6 +234,12 @@ void WeChat::showEmotion()
 {
     if(emotion->isHidden())
     {
+        //表情移动位置
+        int x = this->pos().x() + 110;
+        int y = this->pos().y() + 320;
+
+        emotion->move(x,y);
+
         emotion->show();
     }
     else
@@ -270,6 +277,16 @@ void WeChat::InsertCapture()
     ui->textEdit->insertHtml(uploadPicPath);
     ui->textEdit->moveCursor(QTextCursor::End);
     ui->textEdit->insertPlainText("\r\n");      //添加一个换行符
+}
+
+void WeChat::insertEmotion(int row, int column)
+{
+    int emotionId = row * 6 + column;
+    qDebug()<<"emotionId: "<<emotionId;
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
+
+    this->ui->textBrowser->insertPlainText(QString("[\\e]%1").arg(emotionId));
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
 }
 
 void CaptureNoticeWeChat(int nType, int x, int y, int width, int height, const char *szInfo)

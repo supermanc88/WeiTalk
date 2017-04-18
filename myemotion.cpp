@@ -13,6 +13,9 @@ MyEmotion::MyEmotion(QWidget *parent) :
     ui(new Ui::MyEmotion)
 {
     ui->setupUi(this);
+    this->ui->tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+
+    connect(this->ui->tableWidget, SIGNAL(cellClicked(int,int)), this, SIGNAL(cellClicked(int,int)));
 }
 
 MyEmotion::~MyEmotion()
@@ -49,7 +52,7 @@ void MyEmotion::addEmotionItem(QString fileName)
 void MyEmotion::initEmotion()
 {
     QString path = ":/faces/emotion/%1.gif";
-    for(int i=0; i<24; i++)
+    for(int i=0; i<132; i++)
     {
         qDebug()<<i;
         addEmotionItem(path.arg(i+1));

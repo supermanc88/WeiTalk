@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>192</width>
+    <width>210</width>
     <height>128</height>
    </rect>
   </property>
@@ -18,18 +18,15 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>192</width>
+     <width>211</width>
      <height>128</height>
     </rect>
-   </property>
-   <property name="verticalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOff</enum>
    </property>
    <property name="horizontalScrollBarPolicy">
     <enum>Qt::ScrollBarAlwaysOff</enum>
    </property>
    <property name="rowCount">
-    <number>4</number>
+    <number>22</number>
    </property>
    <property name="columnCount">
     <number>6</number>
@@ -46,9 +43,24 @@
    <attribute name="verticalHeaderDefaultSectionSize">
     <number>32</number>
    </attribute>
-   <attribute name="verticalHeaderHighlightSections">
-    <bool>true</bool>
-   </attribute>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
+   <row/>
    <row/>
    <row/>
    <row/>

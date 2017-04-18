@@ -11,6 +11,8 @@ class MyEmotion;
 class MyEmotion : public QWidget
 {
     Q_OBJECT
+signals:
+    void cellClicked(int row, int column);
 
 public:
     explicit MyEmotion(QWidget *parent = 0);
