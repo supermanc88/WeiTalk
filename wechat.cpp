@@ -209,7 +209,10 @@ void WeChat::setChatContent(QString message)
 {
     this->ui->textBrowser->moveCursor(QTextCursor::End);
     this->ui->textEdit->insertPlainText("\r\n"); //添加换行符
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
     this->ui->textBrowser->insertHtml(message);
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
+    ui->textBrowser->insertPlainText("\r\n");
     this->ui->textBrowser->textCursor().movePosition(QTextCursor::End);
     this->ui->textBrowser->moveCursor(QTextCursor::End);
 

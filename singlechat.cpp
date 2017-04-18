@@ -132,6 +132,8 @@ void SingleChat::messageReceived(const QXmppMessage &message)
 void SingleChat::setChatText(QString message)
 {
     this->ui->textBrowser->moveCursor(QTextCursor::End);
+    ui->textBrowser->insertPlainText("\r\n");
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
     ui->textBrowser->insertHtml(message);
     this->ui->textBrowser->moveCursor(QTextCursor::End);
     ui->textBrowser->insertPlainText("\r\n");
