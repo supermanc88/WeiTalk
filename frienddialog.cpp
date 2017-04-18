@@ -846,6 +846,7 @@ void FriendDialog::messageReceived(const QXmppMessage &message)
             int messageCount = item->messageCount();
             item->setMessageCount(++messageCount);
 
+            m_showMessage->adjustSize();
             m_showMessage->update();
             m_showMessage->show();
         }
@@ -859,9 +860,11 @@ void FriendDialog::messageReceived(const QXmppMessage &message)
             messageBox[bareJID] = item;
 
             m_showMessage->addItem(item);
+//            m_showMessage->resize(m_showMessage->sizeHint());
             m_showMessage->adjustSize();
             m_showMessage->update();
             m_showMessage->show();
+
         }
     }
     //如果没有打开的话，就会用m_showMessage显示

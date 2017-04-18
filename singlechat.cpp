@@ -116,7 +116,7 @@ void SingleChat::SingleSendMessage()
     client->sendMessage(this->bareJid,sendString);
     this->ui->textEdit->clear();
 
-    ui->textBrowser->insertPlainText(LoginUserName + ": " + "\r\n");
+    ui->textBrowser->insertPlainText("\r\n" + LoginUserName + ": " + "\r\n");
     ui->textBrowser->insertHtml("  " + sendString + "\r\n");
     this->ui->textBrowser->textCursor().movePosition(QTextCursor::End);
 }
