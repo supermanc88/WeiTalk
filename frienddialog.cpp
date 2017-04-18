@@ -44,8 +44,11 @@
 #include <QDateTime>
 
 extern QString LoginUserName;   //定义在logindialog中
-extern QMap<int,WeChat*> openGroupChatMap;
+//extern QMap<int,WeChat*> openGroupChatMap;
+QMap<int, WeChat*> openGroupChatMap;  //打开的群聊窗口
 extern QMap<QString, SingleChat *> openSingleChatMap;
+
+QList<group_info_t> * GroupList;
 
 QMap<QString, ItemOfMB *> messageBox;
 
@@ -98,8 +101,6 @@ typedef enum
 FriendDialog * thisPointer; //全局的FriendDialog指针
 
 QString newPicPath;  //定义全局的图片路径
-
-QMap<int, WeChat*> openGroupChatMap;  //打开的群聊窗口
 
 FriendDialog::FriendDialog(QDialog *parent) : QDialog(parent)
 {
@@ -477,6 +478,8 @@ void FriendDialog::getGroupList()
 {
     qDebug()<<LoginUserName<<"username................";
     WTAPI.SelectGroupList(LoginUserName, groupList);
+
+    GroupList = groupList;
 
     QList<group_info_t>::iterator group;
     for(group=groupList->begin(); group!=groupList->end(); group++)
@@ -977,6 +980,61 @@ void FriendDialog::initSysTrayContextMenu()
     m_sysTrayMenu->addAction(imoffline);
     m_sysTrayMenu->addAction(imonline);
     m_sysTrayMenu->addAction(imsilent);
+}
+
+void FriendDialog::cancelLightingMessageBox()
+{
+    m_showMessage->hide();
+}
+
+void FriendDialog::readAllMessageBox()
+{
+    QMap<QString, ItemOfMB*>::iterator messageBoxIterator;
+    for(messageBoxIterator = messageBox.begin(); messageBoxIterator != messageBox.end(); messageBoxIterator++)
+    {
+        QString bareJid = messageBoxIterator.key();
+        if(bareJid.contains("conference.im.weitainet.com"))
+        {
+            //群组
+            QString groupIdstr = bareJid.section("@", 0, 0);
+            int groupid = groupIdstr.toInt();
+
+            if(openGroupChatMap.contains(groupid))
+            {
+                WeChat * weChat = openGroupChatMap[groupid];
+                weChat->activateWindow();
+            }
+            else
+            {
+                WeChat * weChat = new WeChat(groupid);
+                openGroupChatMap[groupid] = weChat;
+
+//                QList<group_info_t>::iterator grouplist;
+                QString groupName;
+                QList<group_info_t>::iterator group;
+                for(group=groupList->begin(); group!=groupList->end(); group++)
+                {
+                    if((*group).nGroupId == groupid)
+                    {
+                        groupName = (*group).acGroupName;
+                    }
+//                    m_groupItme->getOrCreateItem((*group).acGroupName, (*group).nGroupId);
+                }
+
+                weChat->setGroupName(groupName);
+                weChat->initGroupMemberList();
+                weChat->show();
+                weChat->activateWindow();
+            }
+
+        }
+        else
+        {
+            //个人
+
+        }
+    }
+
 }
 
 string FriendDialog::GenerateAuthCode(string strAuthCode)

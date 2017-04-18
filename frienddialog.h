@@ -186,6 +186,11 @@ public slots:
 
 /***************************最小化到托盘end****************/
 
+/**************************消息盒子start*******************/
+    void cancelLightingMessageBox();
+    void readAllMessageBox();
+/**************************消息盒子end*********************/
+
 private:
     bool m_moving;
     QPoint m_movePosition;

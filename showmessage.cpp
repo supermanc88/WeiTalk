@@ -9,6 +9,8 @@ ShowMessage::ShowMessage(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    connect(this->ui->cancelLighting, SIGNAL(clicked(bool)), this, SIGNAL(cancelLightingBtn()));
+    connect(this->ui->readAll, SIGNAL(clicked(bool)), this, SIGNAL(readAllBtn()));
 }
 
 ShowMessage::~ShowMessage()

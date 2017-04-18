@@ -12,6 +12,10 @@ class ShowMessage : public QWidget
 {
     Q_OBJECT
 
+signals:
+    void cancelLightingBtn();
+    void readAllBtn();
+
 public:
     explicit ShowMessage(QWidget *parent = 0);
     ~ShowMessage();
