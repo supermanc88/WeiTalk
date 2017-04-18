@@ -833,8 +833,8 @@ void FriendDialog::messageReceived(const QXmppMessage &message)
     if(openSingleChatMap.contains(bareJID))
     {
         SingleChat * singleChat = openSingleChatMap[bareJID];
-        singleChat->setChatText("\r\n" + bareJID + ":" + "\r\n");
-        singleChat->setChatContent("    " + messageBody + "\r\n");
+        singleChat->setChatText(bareJID + ":");
+        singleChat->setChatContent(messageBody);
     }
     else
     {

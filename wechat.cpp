@@ -196,17 +196,21 @@ void WeChat::sendMessage()
 
     this->ui->textEdit->clear();
 
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
     this->ui->textBrowser->insertPlainText("\r\n" + LoginUserName + ": " + "\r\n");
     this->ui->textBrowser->insertHtml("    " + sendText + "\r\n");
     this->ui->textBrowser->textCursor().movePosition(QTextCursor::End);
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
 
 }
 
 void WeChat::setChatContent(QString message)
 {
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
     this->ui->textEdit->insertPlainText("\r\n"); //添加换行符
     this->ui->textBrowser->insertHtml(message);
     this->ui->textBrowser->textCursor().movePosition(QTextCursor::End);
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
 
 //    this->ui->textBrowser->append(message);
 }

@@ -116,9 +116,11 @@ void SingleChat::SingleSendMessage()
     client->sendMessage(this->bareJid,sendString);
     this->ui->textEdit->clear();
 
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
     ui->textBrowser->insertPlainText("\r\n" + LoginUserName + ": " + "\r\n");
     ui->textBrowser->insertHtml("  " + sendString + "\r\n");
     this->ui->textBrowser->textCursor().movePosition(QTextCursor::End);
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
 }
 
 void SingleChat::messageReceived(const QXmppMessage &message)
@@ -128,14 +130,22 @@ void SingleChat::messageReceived(const QXmppMessage &message)
 
 void SingleChat::setChatText(QString message)
 {
-    ui->textBrowser->insertHtml(message + "\r\n");
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
+    ui->textBrowser->insertHtml(message);
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
+    ui->textBrowser->insertPlainText("\r\n");
     this->ui->textBrowser->textCursor().movePosition(QTextCursor::End);
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
 }
 
 void SingleChat::setChatContent(QString message)
 {
-    ui->textBrowser->insertHtml(message + "\r\n");
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
+    ui->textBrowser->insertHtml(message);
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
+    ui->textBrowser->insertPlainText("\r\n");
     this->ui->textBrowser->textCursor().movePosition(QTextCursor::End);
+    this->ui->textBrowser->moveCursor(QTextCursor::End);
 }
 
 void SingleChat::sendSinglePic()
